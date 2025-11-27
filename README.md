@@ -72,3 +72,4 @@ export default defineConfig([
 ])
 ```
 # vehicle-mngt-frontend
+# vehicle-mngt-frontend
