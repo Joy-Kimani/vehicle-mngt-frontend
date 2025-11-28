@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link, useLocation } from 'react-router'
-import { LayoutDashboardIcon, LogOut, Settings, Ticket, User } from 'lucide-react'
+import { DollarSignIcon, LayoutDashboardIcon, LogOut, Settings, Ticket, ToolCase} from 'lucide-react'
 
 const SideNav:React.FC = () => {
   const location = useLocation()
@@ -15,19 +15,25 @@ const SideNav:React.FC = () => {
             
         },
         {
-            name: 'My Profile',
-            path: '/dashboard/profile',
-            icon: <User className="w-5 h-5" />
-        },
-        {
-            name: 'Bookings',
+            name: 'Bookings management and Details',
             path: '/dashboard/bookings',
             icon: <Ticket className="w-5 h-5" />
         },
         {
-            name: 'Settings',
+            name: 'My Payment History',
+            path: '/dashboard/payments',
+            icon: <DollarSignIcon className="w-5 h-5" />
+        },
+        
+        {
+            name: 'My Profile and Settings',
             path: '/dashboard/settings',
             icon: <Settings className="w-5 h-5" />
+        },
+        {
+            name: 'Help and Support',
+            path: '/dashboard/support',
+            icon: <ToolCase className="w-5 h-5" />
         },
         {
             name: 'Back to site',

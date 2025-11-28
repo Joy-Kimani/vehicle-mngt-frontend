@@ -14,7 +14,7 @@ const Navbar:React.FC = () => {
   return (
 <>
 {/* <div className=' bg-amber-900 font-serif'> */}
-        <div className="navbar shadow-lg text-zinc-600 bg-amber-500 font-serif text-lg">
+        <div className="navbar shadow-lg text-zinc-600 bg-amber-500 font-serif text-lg position-sticky">
             {/*logo/home link*/}
             <div className="navbar-start">
                 <Link to="/" className="btn btn-ghost text-xl">

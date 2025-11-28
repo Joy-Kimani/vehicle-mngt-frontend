@@ -7,9 +7,10 @@ import Vehicles from './pages/Vehicles';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/users/Dashboard';
-import Profile from './pages/users/Profile';
 import Bookings from './pages/users/Bookings';
 import Settings from './pages/users/Settings';
+import Support from './pages/users/Support';
+import Payments from './pages/users/Payments';
 
 function App() {
 
@@ -44,10 +45,6 @@ function App() {
       element: <Dashboard/>
     },
     {
-      path:'/dashboard/profile',
-      element: <Profile/>
-    },
-    {
       path:'/dashboard/bookings',
       element: <Bookings/>
     },
@@ -55,6 +52,14 @@ function App() {
       path:'/dashboard/settings',
       element: <Settings />
     },
+    {
+      path: '/dashboard/support',
+      element:  <Support />
+    },
+    {
+      path:'/dashboard/payments',
+      element: <Payments />
+    }
     
 
   ])
