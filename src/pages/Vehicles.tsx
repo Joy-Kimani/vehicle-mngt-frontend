@@ -25,125 +25,9 @@ type VehicleProduct ={
     back_image_url?: string;
     side_image_url?: string;
     interior_image_url?: string;
-}
-
-
-
-// const allCarProducts: VehicleProduct[] = [
-//   {
-//     vehicle_id: 1,
-//     name: '300 SL Gullwing',
-//     brand: 'Mercedes-Benz',
-//     transmission: 'Manual',
-//     fuel_type: 'Petrol',
-//     seat_number: 2,
-//     is_available: true,
-//     price: 3500,
-//     rating: 5.0,
-//     year: 1957,
-//     images: {
-//       front: "https://images.squarespace-cdn.com/content/v1/5c84de4dca525b5555d882ad/1553779776393-NDE72RNIILK8FQI24D42/21+Merc+300SL+Frontal+Doors+Up.JPG?format=300w",
-//       back: "https://images.squarespace-cdn.com/content/v1/5c84de4dca525b5555d882ad/1553779761465-GVVK98ICBDAWMQ85BTJ6/19+Merc+300SL+Rear+Rump.JPG?format=300w",
-//       side: "https://images.squarespace-cdn.com/content/v1/5c84de4dca525b5555d882ad/1553779754109-MURB64V2VD4GDLBTRHO4/18+Merc+300SL+Profile+R2L.JPG?format=300w",
-//       interior: "https://images.squarespace-cdn.com/content/v1/5c84de4dca525b5555d882ad/1553779704533-DLAWSLE1XCV0Y55KEEIS/12+Merc+300SL+Interior+from+Passenger.JPG?format=300w"
-//     }
-//   },
-//   {
-//     vehicle_id: 2,
-//     name: 'E-Type Roadster',
-//     brand: 'Jaguar',
-//     transmission: 'Manual',
-//     fuel_type: 'Petrol',
-//     seat_number: 2,
-//     is_available: true,
-//     price: 2800,
-//     rating: 4.8,
-//     year: 1965,
-//     images: {
-//       front: "https://i.imgur.com/kOepxyP.jpeg",
-//       back: "https://i.imgur.com/gakdmIv.jpeg",
-//       side: "https://i.imgur.com/8p4kEfC.jpeg",
-//       interior: "https://i.imgur.com/3OLpQIQ.jpeg"
-//     }
-//   },
-//   {
-//     vehicle_id: 3,
-//     name: 'DB5',
-//     brand: 'Aston Martin',
-//     transmission: 'Auto',
-//     fuel_type: 'Petrol',
-//     seat_number: 4,
-//     is_available: false,
-//     price: 4200,
-//     rating: 4.9,
-//     year: 1964,
-//     images: {
-//       front: "https://i.imgur.com/6xMHpE4.jpeg",
-//       back: "https://i.imgur.com/dRm44oa.jpeg",
-//       side: "https://i.imgur.com/7Pz5ZVe.jpeg",
-//       interior: "https://i.imgur.com/wiAE0TH.jpeg"
-//     }
-//   },
-//   {
-//     vehicle_id: 4,
-//     name: 'Model B',
-//     brand: 'Ford',
-//     transmission: 'Manual',
-//     fuel_type: 'Petrol',
-//     seat_number: 4,
-//     is_available: true,
-//     price: 1500,
-//     rating: 4.0,
-//     year: 1932,
-//     images: {
-//       front: "https://i.imgur.com/fj85z38.jpeg",
-//       back: "https://i.imgur.com/MRsduyG.jpeg",
-//       side: "https://i.imgur.com/nf9M3rh.jpeg",
-//       interior: "https://i.imgur.com/MxT6c1s.jpeg"
-//     }
-//   },
-//   {
-//     vehicle_id: 5,
-//     name: '911 Targa',
-//     brand: 'Porsche',
-//     transmission: 'Manual',
-//     fuel_type: 'Petrol',
-//     seat_number: 4,
-//     is_available: true,
-//     price: 1800,
-//     rating: 4.7,
-//     year: 1973,
-//     images: {
-//       front: "https://i.imgur.com/CRZgKgY.jpeg",
-//       back: "https://i.imgur.com/ObgoDbE.jpeg",
-//       side: "https://i.imgur.com/8dGTMPZ.jpeg",
-//       interior: "https://i.imgur.com/foY6P0N.jpeg"
-//     }
-//   },
-//   {
-//     vehicle_id: 6,
-//     name: 'Firebird Formula',
-//     brand: 'Pontiac',
-//     transmission: 'Auto',
-//     fuel_type: 'Petrol',
-//     seat_number: 4,
-//     is_available: false,
-//     price: 1200,
-//     rating: 4.3,
-//     year: 1970,
-//     images: {
-//       front: "https://i.imgur.com/Rk3y1hB.jpeg",
-//       back: "https://i.imgur.com/WzvgrJp.jpeg",
-//       side: "https://i.imgur.com/0pxtxwP.jpeg",
-//       interior: "https://i.imgur.com/FKyG8fR.jpeg"
-//     }
-//   }
-// ];
-
+};
 
 const Vehicles:React.FC = () => {
-
-
 
 const { data: vehicle, error, isLoading } = vehicleApi.useGetAllVehiclesQuery();
 
@@ -287,7 +171,7 @@ const filterCars = useMemo(() => {
         </div>
 
         {/* Vehicle Grid */}
-        <div className='grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 p-4'>
+        <div className='grid grid-cols-1 gap-8 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 p-4'>
         {
         isLoading ?(
           <span className='loading loading-ring loading-success'></span> 

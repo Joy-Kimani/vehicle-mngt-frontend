@@ -43,13 +43,13 @@ export interface VehicleProduct {
   };
 }
 
-export interface ActiveBookingResponse {
-   booking_id: number; 
-   user_id: number;
-   vehicle_id: number;
-   return_date : date;
-   booking_status: string
-}
+// export interface ActiveBookingResponse {
+//    booking_id: number; 
+//    user_id: number;
+//    vehicle_id: number;
+//    return_date : date;
+//    booking_status: string
+// }
 
 
 // type VehicleProduct = {
@@ -71,3 +71,52 @@ export interface ActiveBookingResponse {
 //     interior_image_url?: string;
 //   };
 // };
+
+export interface ActiveBookingResponse {
+  booking_id: number;
+  user_id: number;
+  vehicle_id: number;  
+  booking_date: string;  
+  return_date: string;   
+  total_amount: number;
+  booking_status: "Pending" | "Approved" | "Active" | "Completed" | "Cancelled" | "Rejected";
+  created_at: string;
+  updated_at: string | null;
+}
+
+export interface PendingBookingResponse {
+  payment_id: number;
+  amount: number;
+  payment_status: "Pending"| "Completed"
+  payment_date: string;
+  payment_method: "Card" | "M Pesa";
+  transaction_id: number;
+  created_at: string;
+  updated_at: string;
+  booking_id: number;
+  model: string;
+}
+
+export interface TotalBookings {
+  total_completed: number;
+  total_amount: number;
+}
+export interface Chart {
+  data: { month: string; 
+          rentals: number }[];
+}
+[
+    {
+        "payment_id": 2,
+        "amount": 30000,
+        "payment_status": "Pending",
+        "payment_date": null,
+        "payment_method": "Card",
+        "transaction_id": 123456789,
+        "created_at": "2025-11-27T03:19:00.990Z",
+        "updated_at": null,
+        "booking_id": 2,
+        "model": "Bel Air"
+    }
+]
+
