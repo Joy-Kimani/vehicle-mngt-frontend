@@ -1,194 +1,74 @@
-import React from 'react'
-import UserLayOut from '../../components/userDashboard/UserLayOut'
+import React, { useState } from "react";
+import { useSelector } from "react-redux";
+import { UserDashboardApi } from "../../features/Api/UserDashboard";
+import type { RootState } from "../../features/Api/slice";
+import BookingDetailsModal from "../../components/userDashboard/ BookingDetailsModal";
 
-const Bookings:React.FC = () => {
+const Bookings: React.FC = () => {
+  const { user } = useSelector((state: RootState) => state.authSlice);
+  const user_id = user?.user_id;
+
+  const { data: bookings = [], isLoading, error } = UserDashboardApi.useGetAllBookingsQuery(
+    { user_id: user_id! },
+    { skip: !user_id }
+  );
+
+  const [selectedBooking, setSelectedBooking] = useState<number | null>(null);
+
   return (
-    <UserLayOut>
-    <div>
-    <div className="stats stats-vertical lg:stats-horizontal shadow">
-    <div className="stat">
-      <div className="stat-title">Downloads</div>
-      <div className="stat-value">31K</div>
-      <div className="stat-desc">Jan 1st - Feb 1st</div>
-    </div>
-  
-    <div className="stat">
-      <div className="stat-title">New Users</div>
-      <div className="stat-value">4,200</div>
-      <div className="stat-desc">↗︎ 400 (22%)</div>
-    </div>
-  
-    <div className="stat">
-      <div className="stat-title">New Registers</div>
-      <div className="stat-value">1,200</div>
-      <div className="stat-desc">↘︎ 90 (14%)</div>
-    </div>
-    </div>
-      
-    </div>
-    {/* chart to show user activity */}
-    <div>
-      <div className="overflow-x-auto">
-          <table className="table">
-            {/* head */}
+    <div className="p-6 space-y-6">
+      <h1 className="text-2xl font-bold">My Bookings</h1>
+
+      {isLoading ? (
+        <p>Loading bookings...</p>
+      ) : error ? (
+        <p className="text-red-500">Error fetching bookings.</p>
+      ) : (
+        <div className="overflow-x-auto">
+          <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
             <thead>
-              <tr>
-                <th>
-                  <label>
-                    <input type="checkbox" className="checkbox" />
-                  </label>
-                </th>
-                <th>Name</th>
-                <th>Job</th>
-                <th>Favorite Color</th>
-                <th></th>
+              <tr className="bg-gray-200 text-left">
+                <th className="py-3 px-4">Booking ID</th>
+                <th className="py-3 px-4">Vehicle</th>
+                <th className="py-3 px-4">Booking Date</th>
+                <th className="py-3 px-4">Return Date</th>
+                <th className="py-3 px-4">Amount</th>
+                <th className="py-3 px-4">Status</th>
+                <th className="py-3 px-4">Actions</th>
               </tr>
             </thead>
             <tbody>
-              {/* row 1 */}
-              <tr>
-                <th>
-                  <label>
-                    <input type="checkbox" className="checkbox" />
-                  </label>
-                </th>
-                <td>
-                  <div className="flex items-center gap-3">
-                    <div className="avatar">
-                      <div className="mask mask-squircle h-12 w-12">
-                        <img
-                          src="https://img.daisyui.com/images/profile/demo/2@94.webp"
-                          alt="Avatar Tailwind CSS Component" />
-                      </div>
-                    </div>
-                    <div>
-                      <div className="font-bold">Hart Hagerty</div>
-                      <div className="text-sm opacity-50">United States</div>
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  Zemlak, Daniel and Leannon
-                  <br />
-                  <span className="badge badge-ghost badge-sm">Desktop Support Technician</span>
-                </td>
-                <td>Purple</td>
-                <th>
-                  <button className="btn btn-ghost btn-xs">details</button>
-                </th>
-              </tr>
-              {/* row 2 */}
-              <tr>
-                <th>
-                  <label>
-                    <input type="checkbox" className="checkbox" />
-                  </label>
-                </th>
-                <td>
-                  <div className="flex items-center gap-3">
-                    <div className="avatar">
-                      <div className="mask mask-squircle h-12 w-12">
-                        <img
-                          src="https://img.daisyui.com/images/profile/demo/3@94.webp"
-                          alt="Avatar Tailwind CSS Component" />
-                      </div>
-                    </div>
-                    <div>
-                      <div className="font-bold">Brice Swyre</div>
-                      <div className="text-sm opacity-50">China</div>
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  Carroll Group
-                  <br />
-                  <span className="badge badge-ghost badge-sm">Tax Accountant</span>
-                </td>
-                <td>Red</td>
-                <th>
-                  <button className="btn btn-ghost btn-xs">details</button>
-                </th>
-              </tr>
-              {/* row 3 */}
-              <tr>
-                <th>
-                  <label>
-                    <input type="checkbox" className="checkbox" />
-                  </label>
-                </th>
-                <td>
-                  <div className="flex items-center gap-3">
-                    <div className="avatar">
-                      <div className="mask mask-squircle h-12 w-12">
-                        <img
-                          src="https://img.daisyui.com/images/profile/demo/4@94.webp"
-                          alt="Avatar Tailwind CSS Component" />
-                      </div>
-                    </div>
-                    <div>
-                      <div className="font-bold">Marjy Ferencz</div>
-                      <div className="text-sm opacity-50">Russia</div>
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  Rowe-Schoen
-                  <br />
-                  <span className="badge badge-ghost badge-sm">Office Assistant I</span>
-                </td>
-                <td>Crimson</td>
-                <th>
-                  <button className="btn btn-ghost btn-xs">details</button>
-                </th>
-              </tr>
-              {/* row 4 */}
-              <tr>
-                <th>
-                  <label>
-                    <input type="checkbox" className="checkbox" />
-                  </label>
-                </th>
-                <td>
-                  <div className="flex items-center gap-3">
-                    <div className="avatar">
-                      <div className="mask mask-squircle h-12 w-12">
-                        <img
-                          src="https://img.daisyui.com/images/profile/demo/5@94.webp"
-                          alt="Avatar Tailwind CSS Component" />
-                      </div>
-                    </div>
-                    <div>
-                      <div className="font-bold">Yancy Tear</div>
-                      <div className="text-sm opacity-50">Brazil</div>
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  Wyman-Ledner
-                  <br />
-                  <span className="badge badge-ghost badge-sm">Community Outreach Specialist</span>
-                </td>
-                <td>Indigo</td>
-                <th>
-                  <button className="btn btn-ghost btn-xs">details</button>
-                </th>
-              </tr>
+              {bookings.map((b) => (
+                <tr key={b.booking_id} className="border-b hover:bg-gray-50">
+                  <td className="py-2 px-4">{b.booking_id}</td>
+                  <td className="py-2 px-4">{b.vehicle_id}</td>
+                  <td className="py-2 px-4">{new Date(b.booking_date).toLocaleDateString()}</td>
+                  <td className="py-2 px-4">{new Date(b.return_date).toLocaleDateString()}</td>
+                  <td className="py-2 px-4">Ksh {b.total_amount}</td>
+                  <td className="py-2 px-4">{b.booking_status}</td>
+                  <td className="py-2 px-4">
+                    <button
+                      className="text-blue-500 hover:underline"
+                      onClick={() => setSelectedBooking(b.booking_id)}
+                    >
+                      View Details
+                    </button>
+                  </td>
+                </tr>
+              ))}
             </tbody>
-            {/* foot */}
-            <tfoot>
-              <tr>
-                <th></th>
-                <th>Name</th>
-                <th>Job</th>
-                <th>Favorite Color</th>
-                <th></th>
-              </tr>
-            </tfoot>
           </table>
         </div>
+      )}
+
+      {selectedBooking && (
+        <BookingDetailsModal
+          booking_id={selectedBooking}
+          onClose={() => setSelectedBooking(null)}
+        />
+      )}
     </div>
-    </UserLayOut>
-  )
-}
+  );
+};
 
 export default Bookings

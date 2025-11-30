@@ -9,10 +9,10 @@ interface Vehicle {
 }
 
 interface Props {
-  vehicles: Vehicle[];
+  vehicles?: Vehicle[]; 
 }
 
-const SuggestedVehiclesCarousel: React.FC<Props> = ({ vehicles }) => {
+const SuggestedVehiclesCarousel: React.FC<Props> = ({ vehicles = [] }) => {
   const carouselRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -20,10 +20,10 @@ const SuggestedVehiclesCarousel: React.FC<Props> = ({ vehicles }) => {
     if (!carousel) return;
 
     let scrollAmount = 0;
-    const scrollStep = 2; // pixels per interval
+    const scrollStep = 2; 
     const interval = setInterval(() => {
       if (carousel.scrollLeft >= carousel.scrollWidth - carousel.clientWidth) {
-        carousel.scrollLeft = 0; // loop back
+        carousel.scrollLeft = 0;
         scrollAmount = 0;
       } else {
         carousel.scrollLeft += scrollStep;

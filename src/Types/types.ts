@@ -120,3 +120,40 @@ export interface Chart {
     }
 ]
 
+export interface UpcomingBooking {
+  booking_id: number;
+  user_id: number;
+  vehicle_id: number;
+  booking_date: string;
+  return_date: string; 
+  booking_status: "Pending" | "Approved" | "Active" | "Completed" | "Cancelled" | "Rejected";
+  total_amount: number;
+}
+
+export interface UpcomingReturnsResponse {
+  count: number;
+  upcoming: UpcomingBooking[];
+}
+
+export type UpcomingReturnsAPIResponse = UpcomingReturnsResponse[];
+
+
+export type RecentActivityItem = {
+  id: string | number;
+  type:
+    | "booking_created"
+    | "payment_completed"
+    | "payment_pending"
+    | "payment_failed"
+    | "booking_status"
+    | "pickup"
+    | "dropoff"
+    | "upgrade"
+    | "inspection"
+    | "profile_change"
+    | "document_update";
+
+  description: string;
+  date: string;
+  status?: string;
+};
