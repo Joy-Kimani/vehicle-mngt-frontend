@@ -20,6 +20,7 @@ interface FormErrors {
 }
 
 const Contact: React.FC = () => {
+  
   const [formValues, setFormValues] = useState<ContactFormValues>({
     name: '',
     email: '',
@@ -266,6 +267,11 @@ const Contact: React.FC = () => {
                   </>
                 )}
               </button>
+
+
+
+       
+
             </form>
           </div>
         </div>

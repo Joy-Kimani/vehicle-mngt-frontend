@@ -32,11 +32,8 @@ export const UserDashboardApi = createApi({
     getRecentActivity: builder.query<RecentActivityItem[], { user_id: number }>({
       query: ({ user_id }) => `/dashboard/recent-activity/${user_id}`,
     }),
-
-    getBookingDetailsQuery: builder.query<>({
-      query:({user_id}) => `/bookings`
+    getBookingDetails: builder.query({
+      query: ({ booking_id }) => `/bookings/details/${booking_id}`,
     })
-    
-
   }),
 });

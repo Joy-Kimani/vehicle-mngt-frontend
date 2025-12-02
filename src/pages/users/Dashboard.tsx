@@ -48,37 +48,16 @@ const Dashboard: React.FC = () => {
   UserDashboardApi.useGetRecentActivityQuery({ user_id: user?.user_id! });
 
 
-  const { 
-    data: vehicles, // Use 'vehicles' instead of 'vehicle' for clarity
-    error, 
-    isLoading: isVehicleLoading 
-} = vehicleApi.useGetAllVehiclesQuery(); 
+  const { data: vehicles, error, isLoading: isVehicleLoading } = vehicleApi.useGetAllVehiclesQuery(); 
 
 if (isVehicleLoading) {
-  return <p>Loading suggested vehicles...</p>; // Handle loading state
+  return <p>Loading suggested vehicles...</p>; // loading state
 }
 
 if (error) {
-  return <p>Error loading vehicles</p>; // Handle error state
+  return <p>Error loading vehicles</p>; // error state
 }
 
-  // upcoming returns
-//   const upcomingReturns = useMemo(() => {
-//   const today = new Date();
-//   const sevenDaysLater = new Date();
-//   sevenDaysLater.setDate(today.getDate() + 7);
-
-//   return activeBookings.filter((booking) => {
-//     const returnDate = new Date(booking.return_date);
-//     return (
-//       booking.booking_status.toLowerCase() === 'active' &&
-//       returnDate >= today &&
-//       returnDate <= sevenDaysLater
-//     );
-//   });
-// }, [activeBookings]);
-
-//recent activity
   
   return (
     <UserLayOut>

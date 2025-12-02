@@ -1,13 +1,5 @@
 import React from "react";
-import {
-  Calendar,
-  Clock,
-  Car,
-  CreditCard,
-  CheckCircle,
-  XCircle,
-  Info, 
-} from "lucide-react";
+import {Calendar,Clock,Car,CreditCard,CheckCircle,XCircle,Info} from "lucide-react";
 
 interface ActivityItem {
   id: number;

@@ -157,3 +157,105 @@ export type RecentActivityItem = {
   date: string;
   status?: string;
 };
+
+
+export interface Booking {
+  booking_id: number;
+  user_id: number;
+  vehicle_id: number;
+  booking_date: string;
+  return_date: string;
+  total_amount: number;
+  booking_status: "Pending" | "Approved" | "Active" | "Completed" | "Cancelled" | "Rejected";
+}
+
+export interface VehicleInfo {
+  vehicle_id: number;
+  manufacturer: string;
+  model: string;
+  year: number;
+  transmission: string;
+  fuel_type: string;
+  seating_capacity: number;
+  color: string;
+  features: string;
+  front_image_url?: string;
+  back_image_url?: string;
+  side_image_url?: string;
+  interior_image_url?: string;
+}
+
+export interface PaymentInfo {
+  payment_id: number;
+  booking_id: number;
+  amount: number;
+  payment_status: "Pending" | "Completed" | "Failed";
+  payment_date: string | null;
+  payment_method: string;
+  transaction_id: string;
+}
+
+export interface BookingDetails {
+  booking: Booking;
+  vehicle: VehicleInfo;
+  payment: PaymentInfo | null;
+  return_date: string;
+}
+
+export interface ExtendBookingRequest {
+  booking_id: number;
+  new_return_date: string;
+}
+
+export interface CancelBookingRequest {
+  booking_id: number;
+}
+
+export interface PaymentRequest {
+  booking_id: number;
+  amount: number;
+  payment_method: "Mpesa" | "Card";
+}
+
+
+export interface BookingInfo{
+    booking: {
+        booking_id: number;
+        user_id: number;
+        vehicle_id: number;
+        booking_date: string;
+        return_date: string;
+        total_amount: number;
+        booking_status: string;
+    },
+    vehicle: {
+        vehicle_id: number;
+        manufacturer: string;
+        model: string;
+        year: number;
+        transmission: string;
+        fuel_type: string;
+        seating_capacity: string; 
+        color: string;
+        features: string;
+        front_image_url: string;
+        back_image_url: string;
+        side_image_url: string;
+        interior_image_url: string;
+    },
+    payment: string;
+}
+
+export interface BookingResponse{
+  
+        booking_id: number;
+        user_id: number;
+        vehicle_id: number;
+        booking_date: string;
+        return_date: string;
+        total_amount: number;
+        booking_status: "Pending" | "Approved" | "Active" | "Completed" | "Cancelled" | "Rejected";
+        created_at: string;
+        updated_at: string | null;
+    
+}

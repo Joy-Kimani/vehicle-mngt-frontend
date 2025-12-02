@@ -1,11 +1,26 @@
 import { useEffect, useRef } from "react";
 
 interface Vehicle {
-  vehicle_id: number;
-  manufacturer: string;
-  model: string;
-  front_image_url: string;
-  rental_rate: number;
+    vehicle_id: number;
+    vehicle_spec_id: number;
+    rental_rate: number;
+    availability: boolean;
+
+    manufacturer: string;
+    model: string;
+    year: number;
+    fuel_type: string;
+    engine_capacity: string;
+    transmission: string;
+    seating_capacity: string;
+    color: string;
+    features: string;
+     
+    front_image_url?: string;
+    back_image_url?: string;
+    side_image_url?: string;
+    interior_image_url?: string;
+  
 }
 
 interface Props {

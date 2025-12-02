@@ -5,6 +5,7 @@ import storage from 'redux-persist/lib/storage'
 import authSlice from '../features/Slice/AuthSlice'
 import { vehicleApi } from '../features/Api/VehicleApi'
 import { UserDashboardApi } from '../features/Api/UserDashboard'
+import { BookingsApi } from '../features/Api/BookingsApi'
 
 const authPersistConfig = {
   key: 'auth',
@@ -26,13 +27,16 @@ export const store = configureStore({
     [AuthApi.reducerPath]:AuthApi.reducer,
     [vehicleApi.reducerPath]:vehicleApi.reducer,
     [UserDashboardApi.reducerPath]: UserDashboardApi.reducer,
+    [BookingsApi.reducerPath]: BookingsApi.reducer,
+    
+
 
     //add the auth slice router(one that is persisted)
     authSlice:persistedAuthReducer,
   },
 
    middleware: (getDefaultMiddleware) =>
-        getDefaultMiddleware().concat(AuthApi.middleware, vehicleApi.middleware, UserDashboardApi.middleware)
+        getDefaultMiddleware().concat(AuthApi.middleware, vehicleApi.middleware, UserDashboardApi.middleware, BookingsApi.middleware)
 })
 //export the persrsted store
 export const persistor = persistStore(store)
