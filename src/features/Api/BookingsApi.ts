@@ -48,21 +48,21 @@ export const BookingsApi = createApi({
             invalidatesTags: ['BookingDetails'],
         }),
 
-     createBooking: builder.mutation<CreateBookingResponse, CreateBookingRequest>({    
-         query: (body) => {
-             const { } = body;
-             return {
-                 url: `/bookings`,
-                 method: "POST",
-                 body,
-             }
-         },
-         invalidatesTags: ["BookingDetails"],
-     }),
-     getBookingsByUser: builder.query<BookingResponse[], number>({
-        query: (user_id) => `/bookings/user/${user_id}`,
-        providesTags: ["BookingDetails"]
-      }),
+        createBooking: builder.mutation<CreateBookingResponse, CreateBookingRequest>({    
+            query: (body) => {
+                const { } = body;
+                return {
+                    url: `/bookings`,
+                    method: "POST",
+                    body,
+                }
+            },
+            invalidatesTags: ["BookingDetails"],
+        }),
+        getBookingsByUser: builder.query<BookingResponse[], number>({
+           query: (user_id) => `/bookings/user/${user_id}`,
+           providesTags: ["BookingDetails"]
+         }),
     }),
 });
 

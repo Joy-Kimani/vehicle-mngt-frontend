@@ -11,32 +11,18 @@ const Bookings: React.FC = () => {
   const { user } = useSelector((state: RootState) => state.authSlice);
   const user_id = user?.user_id;
 
-  // 1️⃣ Fetch: ALL bookings for the user
-  const {
-    data: bookings,
-    isLoading: loadingBookings,
-    error: bookingsError,
-  } = BookingsApi.useGetBookingsByUserQuery(user_id ?? skipToken);
+  // fetch all bookings for the user
+  const {data: bookings,isLoading: loadingBookings,error: bookingsError} = BookingsApi.useGetBookingsByUserQuery(user_id ?? skipToken);
 
-  // 2️⃣ Selected booking ID (for details)
-  const [selectedBookingId, setSelectedBookingId] = useState<number | null>(
-    null
-  );
+  // booking ID 
+  const [selectedBookingId, setSelectedBookingId] = useState<number | null>(null);
 
-  // 3️⃣ Fetch: Payment + Vehicle details (only when selected)
-  const {
-    data: details,
-    isLoading: loadingDetails,
-    refetch,
-  } = BookingsApi.useGetAllBookingandPaymentDetailsQuery(
-    selectedBookingId ?? skipToken
-  );
+  // fetch: Payment + Vehicle details 
+  const {data: details,isLoading: loadingDetails,refetch,} = BookingsApi.useGetAllBookingandPaymentDetailsQuery(selectedBookingId ?? skipToken);
 
   // Mutations
-  const [extendBooking, { isLoading: extending }] =
-    BookingsApi.usePutExtensionDeadlineMutation();
-  const [cancelBooking, { isLoading: cancelling }] =
-    BookingsApi.useCancelBookingMutation();
+  const [extendBooking, { isLoading: extending }] = BookingsApi.usePutExtensionDeadlineMutation();
+  const [cancelBooking, { isLoading: cancelling }] = BookingsApi.useCancelBookingMutation();
 
   // Toast
   const [toast, setToast] = useState<{
@@ -102,7 +88,7 @@ const Bookings: React.FC = () => {
             {[1, 2, 3].map((i) => (
               <div
                 key={i}
-                className="animate-pulse bg-gray-200 h-24 rounded-lg"
+                className="animate-pulse bg-gray-200 h-10 rounded-lg"
               ></div>
             ))}
           </div>
@@ -122,76 +108,116 @@ const Bookings: React.FC = () => {
           </div>
         )}
 
-        {/* BOOKINGS LIST */}
-        <div className="space-y-4">
-          {Array.isArray(bookings) &&
-            bookings.map((b) => (
-              <div
-                key={b.booking_id}
-                className="p-4 border rounded-xl bg-white shadow-sm"
-              >
-                <div className="flex justify-between">
-                  <div>
-                    <h2 className="font-semibold">
-                      Booking #{b.booking_id}
-                    </h2>
-                    <p className="text-sm text-gray-500">
-                      Status: {b.booking_status}
-                    </p>
-                  </div>
+        {/* BOOKINGS LIST TABLE */}
+        {Array.isArray(bookings) && bookings.length > 0 && (
+          <div className="overflow-x-auto bg-white border rounded-xl shadow-sm">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Booking ID
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Status
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Actions
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Details
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {bookings.map((b) => (
+                  <tr key={b.booking_id}>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                      #{b.booking_id}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                          b.booking_status === "Active" ? "bg-green-100 text-green-800" :
+                          b.booking_status === "Pending" ? "bg-yellow-100 text-yellow-800" :
+                          "bg-gray-100 text-gray-800"
+                      }`}>
+                          {b.booking_status}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium flex gap-2">
+                      {b.booking_status === "Active" && (
+                        <button
+                          onClick={() => handleExtend(b.booking_id)}
+                          className="px-3 py-1 bg-blue-500 text-white rounded-md text-xs hover:bg-blue-600"
+                          disabled={extending}
+                        >
+                          {extending ? "Extending..." : "Extend"}
+                        </button>
+                      )}
 
-                  <button
-                    onClick={() => setSelectedBookingId(b.booking_id)}
-                    className="text-blue-600 underline text-sm"
-                  >
-                    View Details
-                  </button>
-                </div>
+                      {["Pending", "Active"].includes(b.booking_status) && (
+                        <button
+                          onClick={() => handleCancel(b.booking_id)}
+                          className="px-3 py-1 bg-red-500 text-white rounded-md text-xs hover:bg-red-600"
+                          disabled={cancelling}
+                        >
+                          {cancelling ? "Cancelling..." : "Cancel"}
+                        </button>
+                      )}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                      <button
+                        onClick={() => setSelectedBookingId(b.booking_id)}
+                        className="text-blue-600 hover:text-blue-900 text-sm"
+                      >
+                        View
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
 
-                {/* ACTIONS */}
-                <div className="mt-4 flex gap-3">
-                  {b.booking_status === "Active" && (
-                    <button
-                      onClick={() => handleExtend(b.booking_id)}
-                      className="px-3 py-1 bg-blue-500 text-white rounded-md text-sm"
-                      disabled={extending}
-                    >
-                      {extending ? "Extending..." : "Extend"}
-                    </button>
-                  )}
-
-                  {["Pending", "Active"].includes(b.booking_status) && (
-                    <button
-                      onClick={() => handleCancel(b.booking_id)}
-                      className="px-3 py-1 bg-red-500 text-white rounded-md text-sm"
-                      disabled={cancelling}
-                    >
-                      {cancelling ? "Cancelling..." : "Cancel"}
-                    </button>
-                  )}
-                </div>
-              </div>
-            ))}
-        </div>
-
-        {/* DETAILS PANEL */}
+        {/* DETAILS PANEL TABLE */}
         {selectedBookingId && details && (
           <div className="p-5 mt-6 border rounded-xl bg-white shadow-md">
             <h2 className="text-lg font-semibold mb-4">
-              Booking Details #{details.booking.booking_id}
+              Booking Details {details.booking.booking_id}
             </h2>
 
-            <p><strong>Vehicle:</strong> {details.vehicle.manufacturer} {details.vehicle.model}</p>
-            <p><strong>From:</strong> {format(new Date(details.booking.booking_date), "yyyy-MM-dd")}</p>
-            <p><strong>To:</strong> {format(new Date(details.booking.return_date), "yyyy-MM-dd")}</p>
-            <p><strong>Total:</strong> Ksh {details.booking.total_amount}</p>
-            <p><strong>Payment:</strong> {details.payment?.payment_status ?? "Not Paid"}</p>
+            <div className="overflow-x-auto">
+              <table className="min-w-full border border-gray-200 divide-y divide-gray-200">
+                  <tbody>
+                      <tr className="bg-gray-50">
+                          <td className="px-6 py-3 whitespace-nowrap text-sm font-medium text-gray-700 w-1/4">Vehicle</td>
+                          <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-900">{details.vehicle.manufacturer} {details.vehicle.model}</td>
+                      </tr>
+                      <tr>
+                          <td className="px-6 py-3 whitespace-nowrap text-sm font-medium text-gray-700">Rental Start Date</td>
+                          <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-900">{format(new Date(details.booking.booking_date), "yyyy-MM-dd")}</td>
+                      </tr>
+                      <tr className="bg-gray-50">
+                          <td className="px-6 py-3 whitespace-nowrap text-sm font-medium text-gray-700">Scheduled Return Date</td>
+                          <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-900">{format(new Date(details.booking.return_date), "yyyy-MM-dd")}</td>
+                      </tr>
+                      <tr>
+                          <td className="px-6 py-3 whitespace-nowrap text-sm font-medium text-gray-700">Total Amount</td>
+                          <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-900">Ksh {details.booking.total_amount}</td>
+                      </tr>
+                      <tr className="bg-gray-50">
+                          <td className="px-6 py-3 whitespace-nowrap text-sm font-medium text-gray-700">Payment Status</td>
+                          <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-900">{details.payment?.payment_status ?? "Not Paid"}</td>
+                      </tr>
+                  </tbody>
+              </table>
+            </div>
 
             <button
               onClick={() => setSelectedBookingId(null)}
-              className="mt-4 px-4 py-2 bg-gray-700 text-white rounded-md"
+              className="mt-4 px-4 py-2 bg-gray-700 text-white rounded-md hover:bg-gray-800"
             >
-              Close
+              Close Details
             </button>
           </div>
         )}
@@ -214,5 +240,4 @@ const Bookings: React.FC = () => {
 };
 
 export default Bookings;
-
 

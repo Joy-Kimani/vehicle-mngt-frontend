@@ -11,6 +11,7 @@ import Bookings from './pages/users/Bookings';
 import Settings from './pages/users/Settings';
 import Support from './pages/users/Support';
 import Payments from './pages/users/Payments';
+import PaymentRedirect from './pages/users/PaymentRedirect';
 
 function App() {
 
@@ -59,8 +60,27 @@ function App() {
     {
       path:'/dashboard/payments',
       element: <Payments />
+    },
+    {
+      path:"/payment/callback",
+      element: <PaymentRedirect/>
+    },
+    {
+      path: "/admin-dashboard",
+      element: <Dashboard/>
+    },
+    {
+      path: "/admin-dashboard/bookings",
+      element: <Bookings/>
+    },
+    {
+      path: "/admin-dashboard/payments",
+      element: <Payments/>
+    },
+    {
+      path: "/admin-dashboard/settings",
+      element: <Settings/>
     }
-    
 
   ])
  

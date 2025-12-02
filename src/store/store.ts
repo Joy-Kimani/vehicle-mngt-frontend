@@ -6,6 +6,7 @@ import authSlice from '../features/Slice/AuthSlice'
 import { vehicleApi } from '../features/Api/VehicleApi'
 import { UserDashboardApi } from '../features/Api/UserDashboard'
 import { BookingsApi } from '../features/Api/BookingsApi'
+import { paymentApi } from '../features/Api/PaymentApi'
 
 const authPersistConfig = {
   key: 'auth',
@@ -28,7 +29,7 @@ export const store = configureStore({
     [vehicleApi.reducerPath]:vehicleApi.reducer,
     [UserDashboardApi.reducerPath]: UserDashboardApi.reducer,
     [BookingsApi.reducerPath]: BookingsApi.reducer,
-    
+    [paymentApi.reducerPath]: paymentApi.reducer,
 
 
     //add the auth slice router(one that is persisted)
@@ -36,7 +37,7 @@ export const store = configureStore({
   },
 
    middleware: (getDefaultMiddleware) =>
-        getDefaultMiddleware().concat(AuthApi.middleware, vehicleApi.middleware, UserDashboardApi.middleware, BookingsApi.middleware)
+        getDefaultMiddleware().concat(AuthApi.middleware, vehicleApi.middleware, UserDashboardApi.middleware, BookingsApi.middleware, paymentApi.middleware),
 })
 //export the persrsted store
 export const persistor = persistStore(store)

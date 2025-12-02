@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Analytics = () => {
+const AllBookings = () => {
   return (
     <div>
       
@@ -8,4 +8,4 @@ const Analytics = () => {
   )
 }
 
-export default Analytics
+export default AllBookings

@@ -259,3 +259,15 @@ export interface BookingResponse{
         updated_at: string | null;
     
 }
+
+export interface PaymentsResponse{
+        payment_id: number;
+        booking_id: number;
+        amount: number;
+        payment_status: "Pending" | "Success" | "Failed";
+        payment_date: string | null;
+        payment_method: string;
+        transaction_id: string;
+        created_at: string;
+        updated_at: string | null;
+}
