@@ -28,27 +28,28 @@ export const vehicleApi = createApi({
       invalidatesTags: ['Vehicles']
     }),
     updateVehicle: builder.mutation({
-      query: ({ id, ...body }) => ({
-        url: `/vehicles/${id}`,
+      query: ({ vehicle_id, ...body }) => ({
+        url: `/vehicles/${vehicle_id}`,
         method: 'PUT',
         body
       }),
       invalidatesTags: ['Vehicles']
     }),
+
     deleteVehicle: builder.mutation({
-      query: (id) => ({
-        url: `/vehicles/${id}`,
+      query: (vehicle_id) => ({
+        url: `/vehicles/${vehicle_id}`,
         method: 'DELETE'
       }),
       invalidatesTags: ['Vehicles']
-    })
+    }),
+    createVehicleWithSpec: builder.mutation({    
+     query: (payload) => ({
+       url: "/vehicles/specs",
+       method: "POST",
+       body: payload
+     }),
+     invalidatesTags: ["Vehicles"]
+    }),
   })
 });
-
-export const {
-  useGetAllVehiclesQuery,
-  useGetVehicleByIdQuery,
-  useCreateVehicleMutation,
-  useUpdateVehicleMutation,
-  useDeleteVehicleMutation
-} = vehicleApi;

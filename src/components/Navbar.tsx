@@ -33,6 +33,7 @@ const Navbar:React.FC = () => {
                     <li><Link to="/dashboard">My Dashboard</Link></li>
                     <li><Link to="/register">Register</Link></li>
                     <li><Link to="/login">Login</Link></li>
+                    <li><Link to = "/admin-dashboard">Admin Dashboard</Link></li>
                     {/* dropdown menu */}
                     <li className="dropdown dropdown-hover">
                         

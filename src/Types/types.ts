@@ -35,12 +35,10 @@ export interface VehicleProduct {
     color: string;
     features: string;
 
-    images: {
     front_image_url?: string;
     back_image_url?: string;
     side_image_url?: string;
     interior_image_url?: string;
-  };
 }
 
 // export interface ActiveBookingResponse {
@@ -271,3 +269,49 @@ export interface PaymentsResponse{
         created_at: string;
         updated_at: string | null;
 }
+
+export interface AdminUser 
+   {
+      user_id: number;
+      first_name: string;
+      last_name: string;
+      email: string;
+      password: string;
+      contact_phone: string;
+      address: string;
+      role: string;
+      created_at: string;
+      updated_at: string | null;
+   }
+
+export interface PaymentStatusSummary {
+    success: number;
+    failed: number;
+    pending: number;
+
+}
+
+export interface VehicleSpec {
+    vehicle_spec_id: number;
+    manufacturer: string;
+    model: string;
+    year: number;
+    fuel_type: string;
+    engine_capacity: string;
+    transmission: string;
+    seating_capacity: string;
+    color: string;
+    features: string;
+}
+
+  // {
+  //   "manufacturer": "Mercedes-Benz",
+  //   "model": "300SL Gullwing",
+  //   "year": 1955,
+  //   "fuel_type": "Petrol",
+  //   "engine_capacity": "3.0L I6",
+  //   "transmission": "Manual",
+  //   "seating_capacity": 2,
+  //   "color": "Silver Metallic",
+  //   "features": "Gullwing doors, fuel injection, leather seats, sports suspension"
+  // }

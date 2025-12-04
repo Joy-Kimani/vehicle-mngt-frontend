@@ -12,6 +12,12 @@ import Settings from './pages/users/Settings';
 import Support from './pages/users/Support';
 import Payments from './pages/users/Payments';
 import PaymentRedirect from './pages/users/PaymentRedirect';
+import AdminDashboard from './pages/admin/AdminDashboard';
+import AllBookings from './pages/admin/AllBookings';
+import AllPayments from './pages/admin/AllPayments';
+import AllTickets from './pages/admin/AllTickets';
+import Analytics from './pages/admin/Analytics';
+import AllVehicles from './pages/admin/AllVehicles';
 
 function App() {
 
@@ -67,19 +73,31 @@ function App() {
     },
     {
       path: "/admin-dashboard",
-      element: <Dashboard/>
+      element: <AdminDashboard/>
     },
     {
       path: "/admin-dashboard/bookings",
-      element: <Bookings/>
+      element: <AllBookings/>
     },
     {
       path: "/admin-dashboard/payments",
-      element: <Payments/>
+      element: <AllPayments/>
+    },
+    {
+      path: "/admin-dashboard/tickets",
+      element: <AllTickets/>
     },
     {
       path: "/admin-dashboard/settings",
       element: <Settings/>
+    },
+    {
+      path: "/admin-dashboard/analytics",
+      element: <Analytics/>
+    },
+    {
+      path: '/admin-dashboard/vehicles',
+      element: <AllVehicles/>
     }
 
   ])

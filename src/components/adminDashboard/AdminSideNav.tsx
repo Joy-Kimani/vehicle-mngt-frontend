@@ -24,11 +24,20 @@ const AdminSideNav:React.FC = () => {
             path: '/admin-dashboard/payments',
             icon: <DollarSignIcon className="w-5 h-5" />
         },
-        
         {
-            name: 'My Profile and Settings',
-            path: '/admin-dashboard/settings',
+            name: 'Vehicle Management',
+            path: '/admin-dashboard/vehicles',
+            icon: <ToolCase className="w-5 h-5" />
+        },
+        {
+            name: 'Tickets and Support',
+            path: '/admin-dashboard/tickets',
             icon: <Settings className="w-5 h-5" />
+        },
+        {
+            name: 'Analytics',
+            path: '/admin-dashboard/analytics',
+            icon: <ToolCase className="w-5 h-5" />
         },
         {
             name: 'Back to site',

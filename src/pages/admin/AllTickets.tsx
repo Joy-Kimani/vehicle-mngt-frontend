@@ -1,6 +1,6 @@
 import React from 'react'
 
-const PaymentHistory:React.FC = () => {
+const AllTickets = () => {
   return (
     <div>
       
@@ -8,6 +8,4 @@ const PaymentHistory:React.FC = () => {
   )
 }
 
-export default PaymentHistory
-
-
+export default AllTickets

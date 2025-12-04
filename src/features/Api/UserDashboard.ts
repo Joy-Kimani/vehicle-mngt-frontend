@@ -34,6 +34,7 @@ export const UserDashboardApi = createApi({
     }),
     getBookingDetails: builder.query({
       query: ({ booking_id }) => `/bookings/details/${booking_id}`,
-    })
+    }),
+    
   }),
 });

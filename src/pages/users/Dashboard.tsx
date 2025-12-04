@@ -50,13 +50,13 @@ const Dashboard: React.FC = () => {
 
   const { data: vehicles, error, isLoading: isVehicleLoading } = vehicleApi.useGetAllVehiclesQuery(); 
 
-if (isVehicleLoading) {
-  return <p>Loading suggested vehicles...</p>; // loading state
-}
+// if (isVehicleLoading) {
+//   return <p>Loading suggested vehicles...</p>; // loading state
+// }
 
-if (error) {
-  return <p>Error loading vehicles</p>; // error state
-}
+// if (error) {
+//   return <p>Error loading vehicles</p>; // error state
+// }
 
   
   return (

@@ -17,15 +17,10 @@ const Payments: React.FC = () => {
   const { isAuthenticated, user } = useSelector((state: RootState) => state.authSlice);
     const user_id = user?.user_id;
   // Fetch all bookings
-  const {
-    data: bookings,
-    isLoading: isBookingsLoading,
-    error: bookingsError,
-  } = BookingsApi.useGetAllBookingandPaymentDetailsQuery({ user_id } as { user_id: number });
+  const { data: bookings, isLoading: isBookingsLoading, error: bookingsError} = BookingsApi.useGetAllBookingandPaymentDetailsQuery({ user_id } as { user_id: number });
 
   // Payment initialization mutation
-  const [initializePayment, { isLoading: isInitializing }] =
-    paymentApi.useInitializePaymentMutation();
+  const [initializePayment, { isLoading: isInitializing }] = paymentApi.useInitializePaymentMutation();
 
   // Modal state
   const [isModalOpen, setIsModalOpen] = useState(false);
