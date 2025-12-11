@@ -68,7 +68,50 @@ export const BookingsApi = createApi({
            query: () => `/bookings`,
            providesTags: ["BookingDetails"]
          }),
+         getBookings: builder.query({
+      query: () => "/bookings",
+      providesTags: ["BookingDetails"],
     }),
+
+    approveBooking: builder.mutation({
+      query: (id) => ({
+        url: `/bookings/${id}/approve`,
+        method: "PUT",
+      }),
+      invalidatesTags: ["BookingDetails"],
+    }),
+
+    extendBooking:builder.mutation({
+      query: ({booking_id, new_return_date}) => ({
+        url: `/bookings/dashboard/extend/${booking_id}`,
+        method: "PUT",
+        body: { new_return_date },
+      }),
+      invalidatesTags: ["BookingDetails"],
+    }),
+
+    //more CRUD ops
+    getBookingById: builder.query({
+      query: (booking_id) => `/bookings/${booking_id}`,
+      providesTags: ["BookingDetails"],
+    }),
+   
+    updateBooking: builder.mutation({
+      query: ({ booking_id, ...updatedBooking }) => ({
+        url: `/bookings/${booking_id}`,
+        method: "PUT",
+        body: updatedBooking,
+      }),
+      invalidatesTags: ["BookingDetails"],
+    }),
+    deleteBooking: builder.mutation({
+      query: (booking_id) => ({
+        url: `/bookings/${booking_id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["BookingDetails"],
+    }),
+ }),
 });
 
 

@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
+import { Link } from 'react-router';
 
 const MidSection:React.FC = () => {
   const containerRef = useRef(null);
@@ -143,7 +144,9 @@ const MidSection:React.FC = () => {
               </div>
             </div>
             <button className="bg-amber-600 hover:bg-amber-500 text-zinc-900 font-bold py-3 px-4 rounded-b-xl transition duration-300">
+              <Link to ="/vehicles">
                 Inquire & Rent Now
+                </Link>
             </button>
           </div>
         ))}

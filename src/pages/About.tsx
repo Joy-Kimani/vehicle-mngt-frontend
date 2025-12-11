@@ -3,6 +3,8 @@ import { Shield, Award, Map, Clock } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { Link } from 'react-router';
+import Chat from '../components/Chat';
+import ChatWidget from '../components/ChatWidget';
 
 const About:React.FC = () => {
   return (
@@ -100,6 +102,7 @@ const About:React.FC = () => {
           </Link>
           
         </section>
+        <ChatWidget />
     
       </div>
     </div>

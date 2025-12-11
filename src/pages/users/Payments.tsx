@@ -1,157 +1,124 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { useParams, useNavigate } from "react-router";
 import UserLayOut from "../../components/userDashboard/UserLayOut";
-import { paymentApi } from "../../features/Api/PaymentApi";
-import { BookingsApi } from "../../features/Api/BookingsApi";
-import PaymentHistory from "./PaymentHistory";
-import PaymentConfirmModal from "../../components/PaymentConfirmModal";
 import { useSelector } from "react-redux";
 import type { RootState } from "../../store/store";
 
-type SelectedPayment = {
+interface Booking {
   booking_id: number;
-  email: string;
-  amount: number;
-};
+  total_amount: number;
+  user_email: string;
+}
 
 const Payments: React.FC = () => {
-  const { isAuthenticated, user } = useSelector((state: RootState) => state.authSlice);
-    const user_id = user?.user_id;
-  // Fetch all bookings
-  const { data: bookings, isLoading: isBookingsLoading, error: bookingsError} = BookingsApi.useGetAllBookingandPaymentDetailsQuery({ user_id } as { user_id: number });
+  const { bookingId } = useParams<{ bookingId: string }>();
+  const navigate = useNavigate();
+  const auth = useSelector((state: RootState) => state.authSlice);
 
-  // Payment initialization mutation
-  const [initializePayment, { isLoading: isInitializing }] = paymentApi.useInitializePaymentMutation();
+  const [booking, setBooking] = useState<Booking | null>(null);
+  const [loading, setLoading] = useState(false);
 
-  // Modal state
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const email = auth?.user?.email;
 
-  // Stores booking details clicked by user
-  const [selectedPayment, setSelectedPayment] = useState<SelectedPayment | null>(
-    null
-  );
+  // Fetch booking details
+  useEffect(() => {
+    const fetchBooking = async () => {
+      if (!bookingId) return;
 
-  const handleOpenModal = (booking: any) => {
-    setSelectedPayment({
-      booking_id: booking.booking_id,
-      email: booking.user_email,
-      amount: booking.total_amount,
-    });
-    setIsModalOpen(true);
-  };
-
-  const handleConfirmPayment = async () => {
-    if (!selectedPayment) return;
-
-    try {
-      const res: any = await initializePayment({
-        email: selectedPayment.email,
-        booking_id: selectedPayment.booking_id,
-        amount: selectedPayment.amount,
-        method: "Card",
-      }).unwrap();
-
-      console.log("Payment Initialized:", res);
-
-      // redirect user to payment gateway
-      if (res?.authorization_url) {
-        window.location.href = res.authorization_url;
-      } else {
-        alert("Payment initialized but no redirect URL returned.");
+      try {
+        const res = await axios.get(`http://localhost:3000/api/bookings/${bookingId}`);
+        console.log("Fetched booking:", res.data);
+        setBooking(res.data);
+      } catch (err) {
+        console.error("Failed to load booking:", err);
       }
-    } catch (err) {
-      console.error("Payment Init Error:", err);
-      alert("Payment failed!");
+    };
+
+    fetchBooking();
+  }, [bookingId]);
+
+  // Initialize payment and redirect to Paystack
+// const handlePay = () => {
+//   if (!booking) {
+//     alert("Booking not loaded yet");
+//     return;
+//   }
+
+//   if (!email) {
+//     alert("User email not available");
+//     return;
+//   }
+
+//   setLoading(true);
+
+//   try {
+//     // Build the URL with query parameters
+//     const params = new URLSearchParams({
+//       email,
+//       booking_id: String(booking.booking_id),
+//       callback_url: "http://localhost:5173/dashboard/payment/callback",
+//     });
+
+//     // Redirect browser to backend route, backend will redirect to Paystack
+//     window.location.href = `http://localhost:3000/api/payment/initialize?${params.toString()}`;
+//   } catch (err) {
+//     console.error("Payment initialization error:", err);
+//     alert("Payment initialization failed");
+//   } finally {
+//     setLoading(false);
+//   }
+// };
+const handlePay = async () => {
+  if (!booking) return alert("Booking not loaded yet");
+  if (!email) return alert("User email not available");
+
+  setLoading(true);
+
+  try {
+    const res = await axios.post('http://localhost:3000/api/payment/initialize', {
+      email,
+      amount: booking.total_amount,
+      booking_id: booking.booking_id,
+      callback_url: 'http://localhost:5173/dashboard/payment/callback', // your callback page
+    });
+
+    const data = res.data;
+    if (data?.authorization_url) {
+      window.location.href = data.authorization_url; // redirect to Paystack
+    } else {
+      console.error("No authorization URL returned:", data);
+      alert("Payment initialization failed");
     }
-  };
+  } catch (err) {
+    console.error("Payment initialization error:", err);
+    alert("Payment initialization failed");
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <UserLayOut>
-      <div className="p-6 max-w-4xl mx-auto">
-        <h2 className="text-xl font-semibold mb-4 text-neutral-800 dark:text-neutral-200">
-          Payments Page
-        </h2>
+      <div className="max-w-3xl mx-auto p-6">
+        <h1 className="text-2xl font-bold mb-4">Checkout</h1>
 
-        {/* Payment History Section */}
-        <PaymentHistory />
+        {!booking ? (
+          <p>Loading booking details...</p>
+        ) : (
+          <div className="bg-zinc-800 p-6 rounded shadow mb-4">
+            <p><strong>Booking:</strong> {booking.booking_id}</p>
+            <p><strong>Customer:</strong> {booking.user_email}</p>
+            <p><strong>Amount:</strong> KES {Number(booking.total_amount).toLocaleString()}</p>
 
-        <h3 className="text-lg font-semibold mt-6 mb-3 text-neutral-700 dark:text-neutral-300">
-          Pending Bookings
-        </h3>
-
-        {/* BOOKINGS TABLE */}
-        <div className="overflow-x-auto shadow rounded border border-gray-300 dark:border-gray-700">
-          <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-            <thead className="bg-gray-100 dark:bg-gray-800">
-              <tr>
-                <th className="px-4 py-2 text-left">Booking ID</th>
-                <th className="px-4 py-2 text-left">Email</th>
-                <th className="px-4 py-2 text-left">Amount</th>
-                <th className="px-4 py-2 text-left">Status</th>
-                <th className="px-4 py-2 text-center">Action</th>
-              </tr>
-            </thead>
-
-            <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-              {isBookingsLoading && (
-                <tr>
-                  <td colSpan={5} className="px-4 py-4 text-center">
-                    Loading bookings…
-                  </td>
-                </tr>
-              )}
-
-              {bookingsError && (
-                <tr>
-                  <td colSpan={5} className="px-4 py-4 text-center text-red-500">
-                    Error loading bookings
-                  </td>
-                </tr>
-              )}
-
-              {bookings?.length === 0 && (
-                <tr>
-                  <td colSpan={5} className="px-4 py-4 text-center">
-                    No bookings found
-                  </td>
-                </tr>
-              )}
-
-              {bookings?.map((booking: any) => (
-                <tr key={booking.booking_id}>
-                  <td className="px-4 py-3">{booking.booking_id}</td>
-                  <td className="px-4 py-3">{booking.user_email}</td>
-                  <td className="px-4 py-3">KES {booking.total_amount}</td>
-                  <td className="px-4 py-3 capitalize">{booking.payment_status}</td>
-
-                  <td className="px-4 py-3 text-center">
-                    {booking.payment_status !== "paid" ? (
-                      <button
-                        onClick={() => handleOpenModal(booking)}
-                        className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
-                      >
-                        Pay Now
-                      </button>
-                    ) : (
-                      <span className="text-green-600 font-semibold">
-                        Paid
-                      </span>
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        {/* Confirmation Modal */}
-        <PaymentConfirmModal
-          open={isModalOpen}
-          setOpen={setIsModalOpen}
-          onConfirm={handleConfirmPayment}
-        />
-
-        {isInitializing && (
-          <p className="text-sm mt-2 text-gray-500">Redirecting to payment…</p>
+            <button
+              onClick={handlePay}
+              disabled={loading}
+              className="mt-4 px-4 py-2 bg-yellow-500 rounded text-black font-bold disabled:opacity-50"
+            >
+              {loading ? "Initializing..." : "Pay Now"}
+            </button>
+          </div>
         )}
       </div>
     </UserLayOut>
@@ -159,4 +126,3 @@ const Payments: React.FC = () => {
 };
 
 export default Payments;
-

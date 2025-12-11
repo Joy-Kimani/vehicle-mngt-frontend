@@ -204,7 +204,7 @@ const Register:React.FC = () => {
             <img 
               src={signup} 
               alt="Register" 
-              className="max-h-full w-auto object-contain rounded-xl shadow-lg" 
+              className="max-h-full w-auto object-contain rounded-xl" 
             />
           </div>
         </div>

@@ -1,73 +1,123 @@
-import React from 'react'
-import { Link } from 'react-router'
+import React from "react";
+import { Link, useNavigate } from "react-router";
+import { useSelector, useDispatch } from "react-redux";
+import type { RootState } from "../store/store";
+import { logout } from "../features/Slice/AuthSlice";
+
 
 const AvatarPlaceholder = () => (
-    <div className="bg-neutral text-neutral-content rounded-full w-10 flex items-center justify-center">
-        <span className="text-xl">U</span>
-    </div>
+  <div className="bg-neutral text-neutral-content rounded-full w-10 h-10 flex items-center justify-center">
+    <span className="text-xl">U</span>
+  </div>
 );
 
-const Navbar:React.FC = () => {
+const Navbar: React.FC = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-//   const navigate = useNavigate();
+  const { isAuthenticated, user } = useSelector(
+    (state: RootState) => state.authSlice
+  );
+
+  const isAdmin = user?.role === "admin";
+
+  const handleLogout = () => {
+
+  dispatch(logout());
+    
+  navigate("/login", { replace: true });
+  };
 
   return (
-<>
-{/* <div className=' bg-amber-900 font-serif'> */}
-        <div className="navbar shadow-lg text-zinc-600 bg-amber-500 font-serif text-lg position-sticky">
-            {/*logo/home link*/}
-            <div className="navbar-start">
-                <Link to="/" className="btn btn-ghost text-xl">
-                    McCormick
-                </Link>
-            </div>
+    <div className="navbar sticky top-0 z-50 shadow-lg bg-amber-500 text-zinc-700 font-serif text-lg">
+      {/* LEFT */}
+      <div className="navbar-start">
+        {/* Mobile menu */}
+        <div className="dropdown">
+          <label tabIndex={0} className="btn btn-ghost lg:hidden">
+            ☰
+          </label>
+          <ul
+            tabIndex={0}
+            className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-amber-500 rounded-box w-52 text-white"
+          >
+            <li><Link to="/">Home</Link></li>
+            <li><Link to="/vehicles">Cars</Link></li>
+            <li><Link to="/about">About</Link></li>
+            <li><Link to="/contact">Contact</Link></li>
 
-            {/* Main Navigation Links */}
-            <div className="navbar-center hidden lg:flex">
-                <ul className="menu menu-horizontal px-1">
-                    {/* navigation links */}
-                    <li><Link to="/">Home</Link></li>
-                    <li><Link to="/vehicles">Cars</Link></li>
-                    <li><Link to="/about">About Us</Link></li>
-                    <li><Link to="/contact">Contact</Link></li>
-                    <li><Link to="/dashboard">My Dashboard</Link></li>
-                    <li><Link to="/register">Register</Link></li>
-                    <li><Link to="/login">Login</Link></li>
-                    <li><Link to = "/admin-dashboard">Admin Dashboard</Link></li>
-                    {/* dropdown menu */}
-                    <li className="dropdown dropdown-hover">
-                        
-                    </li>
-                </ul>
-            </div>
+            {isAuthenticated && !isAdmin && (
+              <li><Link to="/dashboard">My Dashboard</Link></li>
+            )}
 
-            {/*actions */}
-            <div className="navbar-end">
-                {/*User Profile Dropdown */}
-                <div className="dropdown dropdown-end">
-                    <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
-                        <div className="w-10 rounded-full">
-                            {/* placeholder for the user avatar image */}
-                            <AvatarPlaceholder />
-                        </div>
-                    </div>
-                    <ul
-                        tabIndex={0}
-                        className="menu menu-sm dropdown-content text-amber-300 bg-zinc-600 rounded-box z-[1] mt-3 w-52 p-2 shadow-xl"> {/* Added z-[1] and shadow-xl */}
-                        <li>
-                            <Link to="/profile" className="justify-between">
-                                Profile
-                                <span className="badge badge-secondary">New</span>
-                            </Link>
-                        </li>
-                        <li><Link to="/settings">Settings</Link></li>
-                        <li><Link to = "/login">Log Out</Link></li>
-                    </ul>
-                </div>
-            </div>
+            {isAuthenticated && isAdmin && (
+              <li><Link to="/admin-dashboard">Admin Dashboard</Link></li>
+            )}
+
+            {!isAuthenticated && (
+              <>
+                <li><Link to="/register">Register</Link></li>
+                <li><Link to="/login">Login</Link></li>
+              </>
+            )}
+          </ul>
         </div>
-        {/* </div> */}
-        </> 
-    );
-}
-export default Navbar
+
+        <Link to="/" className="btn btn-ghost text-xl">
+          McCormick
+        </Link>
+      </div>
+
+      {/* Desktop */}
+      <div className="navbar-center hidden lg:flex">
+        <ul className="menu menu-horizontal px-1">
+          <li><Link to="/">Home</Link></li>
+          <li><Link to="/vehicles">Cars</Link></li>
+          <li><Link to="/about">About</Link></li>
+          <li><Link to="/contact">Contact</Link></li>
+
+          {isAuthenticated && !isAdmin && (
+            <li><Link to="/dashboard">My Dashboard</Link></li>
+          )}
+
+          {isAuthenticated && isAdmin && (
+            <li><Link to="/admin-dashboard">Admin Dashboard</Link></li>
+          )}
+
+          {!isAuthenticated && (
+            <>
+              <li><Link to="/register">Register</Link></li>
+              <li><Link to="/login">Login</Link></li>
+            </>
+          )}
+        </ul>
+      </div>
+
+      {/* RIGHT */}
+      <div className="navbar-end">
+        {isAuthenticated && (
+          <div className="dropdown dropdown-end">
+            <div tabIndex={0} role="button" className="btn btn-ghost btn-circle">
+              <AvatarPlaceholder />
+            </div>
+            <ul
+              tabIndex={0}
+              className="menu menu-sm dropdown-content mt-3 p-2 shadow bg-zinc-700 text-amber-300 rounded-box w-52"
+            >
+              <li><Link to="dashboard/settings">Profile</Link></li>
+              <li><Link to="dashboard/settings">Settings</Link></li>
+              <li>
+                <button onClick={handleLogout}className="text-red-400">
+                    Logout
+                  
+                </button>
+              </li>
+            </ul>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default Navbar;

@@ -1,179 +1,201 @@
 import React, { useState } from "react";
 import AdminLayout from "../../components/adminDashboard/AdminLayout";
-
-// Example booking type
-interface Booking {
-  id: number;
-  property: string;
-  user: string;
-  startDate: string;
-  endDate: string;
-  amount: number;
-  status: "pending" | "approved" | "rejected" | "checked-in" | "checked-out" | "cancelled";
-  notes?: string;
-}
+import { BookingsApi } from "../../features/Api/BookingsApi";
+import type { BookingResponse } from "../../Types/types";
 
 const AllBookings: React.FC = () => {
-  
-  const [bookings, setBookings] = useState<Booking[]>([
-    {
-      id: 101,
-      property: "Apartment A1",
-      user: "Joy Kimani",
-      startDate: "2025-12-10",
-      endDate: "2025-12-15",
-      amount: 15000,
-      status: "pending",
-    },
-    {
-      id: 102,
-      property: "Apartment B2",
-      user: "Michael Doe",
-      startDate: "2025-12-12",
-      endDate: "2025-12-20",
-      amount: 25000,
-      status: "approved",
-    },
-  ]);
+  const { data: bookings = [], isLoading, error } = BookingsApi.useGetAllBookingsQuery();
+
+  // Mutations
+  const [approveBookingMutation] = BookingsApi.useApproveBookingMutation();
+  const [cancelBookingMutation] = BookingsApi.useCancelBookingMutation();
+  const [updateBookingMutation] = BookingsApi.useUpdateBookingMutation();
+  const [extendBookingMutation] = BookingsApi.useExtendBookingMutation();
 
   // Approve booking
-  const approveBooking = (id: number) => {
-    setBookings((prev) =>
-      prev.map((b) => (b.id === id ? { ...b, status: "approved" } : b))
-    );
+  const approveBooking = async (booking_id: number) => {
+    try {
+      await approveBookingMutation(booking_id).unwrap();
+      console.log("Booking approved:", booking_id);
+    } catch (err) {
+      console.error("Failed to approve booking:", err);
+    }
+  };
+  const handleApprove = async (booking_id: number) => {
+  try {
+    await approveBooking(booking_id).unwrap();
+    console.log("Booking approved:", booking_id);
+  } catch (error) {
+    console.error("Approve failed:", error);
+  }
+};
+
+
+  // Reject booking 
+  const rejectBooking = async (booking_id: number) => {
+    try {
+      await updateBookingMutation({ booking_id, booking_status: "Rejected" }).unwrap();
+      console.log("Booking rejected:", booking_id);
+    } catch (err) {
+      console.error("Failed to reject booking:", err);
+    }
   };
 
-  // Reject booking
-  const rejectBooking = (id: number) => {
-    setBookings((prev) =>
-      prev.map((b) => (b.id === id ? { ...b, status: "rejected" } : b))
-    );
-  };
+  const handleReject = async (booking_id: number) => {
+  try {
+    await updateBookingMutation({
+      booking_id,
+      booking_status: "Rejected",
+    }).unwrap();
 
-  // Check-in / Check-out
-  const checkInOut = (id: number) => {
-    setBookings((prev) =>
-      prev.map((b) =>
-        b.id === id
-          ? { ...b, status: b.status === "checked-in" ? "checked-out" : "checked-in" }
-          : b
-      )
-    );
+    console.log("Booking rejected:", booking_id);
+  } catch (error) {
+    console.error("Reject failed:", error);
+  }
+};
+
+
+  // Check-in / Check-out toggle
+  const checkInOut = async (b: BookingResponse) => {
+    try {
+      const newStatus =
+        b.booking_status === "Active" || b.booking_status === "Approved"
+          ? "Completed"
+          : "Active";
+      await updateBookingMutation({ booking_id: b.booking_id, booking_status: newStatus }).unwrap();
+      console.log("Booking status updated:", b.booking_id);
+    } catch (err) {
+      console.error("Failed to update check-in/out:", err);
+    }
   };
 
   // Cancel booking
-  const cancelBooking = (id: number) => {
-    setBookings((prev) =>
-      prev.map((b) => (b.id === id ? { ...b, status: "cancelled" } : b))
-    );
+  const cancelBooking = async (booking_id: number) => {
+    try {
+      await cancelBookingMutation({ booking_id }).unwrap();
+      console.log("Booking cancelled:", booking_id);
+    } catch (err) {
+      console.error("Failed to cancel booking:", err);
+    }
   };
 
   // Update notes
-  const updateNotes = (id: number, notes: string) => {
-    setBookings((prev) =>
-      prev.map((b) => (b.id === id ? { ...b, notes } : b))
-    );
+  const updateNotes = async (booking_id: number, notes: string) => {
+    try {
+      await updateBookingMutation({ booking_id, notes }).unwrap();
+      console.log("Notes updated for booking:", booking_id);
+    } catch (err) {
+      console.error("Failed to update notes:", err);
+    }
   };
+
+  if (isLoading) return <AdminLayout>Loading bookings...</AdminLayout>;
+  if (error) return <AdminLayout>Error loading bookings</AdminLayout>;
 
   return (
     <AdminLayout>
-    <div className="p-6 space-y-6">
-      <h1 className="text-2xl font-bold">Booking Management</h1>
+      <div className="p-6 space-y-6">
+        <h1 className="text-2xl font-bold">Booking Management</h1>
 
-      <div className="overflow-x-auto">
-        <table className="table table-zebra w-full">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Model</th>
-              <th>User</th>
-              <th>Dates</th>
-              <th>Amount</th>
-              <th>Status</th>
-              <th>Notes</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {bookings.map((b) => (
-              <tr key={b.id}>
-                <td>{b.id}</td>
-                <td>{b.property}</td>
-                <td>{b.user}</td>
-                <td>
-                  {b.startDate} → {b.endDate}
-                </td>
-                <td>KES{b.amount}</td>
-                <td>
-                  <span
-                    className={
-                      b.status === "approved"
-                        ? "text-success"
-                        : b.status === "rejected"
-                        ? "text-error"
-                        : b.status === "pending"
-                        ? "text-warning"
-                        : b.status === "checked-in"
-                        ? "text-info"
-                        : b.status === "checked-out"
-                        ? "text-primary"
-                        : "text-gray-400"
-                    }
-                  >
-                    {b.status}
-                  </span>
-                </td>
-                <td>
-                  <input
-                    type="text"
-                    placeholder="Add note..."
-                    className="input input-sm input-bordered w-full"
-                    value={b.notes || ""}
-                    onChange={(e) => updateNotes(b.id, e.target.value)}
-                  />
-                </td>
-                <td className="flex flex-wrap gap-1">
-                  {b.status === "pending" && (
-                    <>
-                      <button
-                        className="btn btn-sm btn-success"
-                        onClick={() => approveBooking(b.id)}
-                      >
-                        Approve
-                      </button>
-                      <button
+        <div className="overflow-x-auto">
+          <table className="table table-zebra w-full">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Model</th>
+                <th>User</th>
+                <th>Dates</th>
+                <th>Amount</th>
+                <th>Status</th>
+                <th>Notes</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {bookings.map((b: BookingResponse) => (
+                <tr key={b.booking_id}>
+                  <td>{b.booking_id}</td>
+                  <td>{b.vehicle_id}</td>
+                  <td>{b.user_id}</td>
+                  <td>
+                    {b.booking_date} → {b.return_date}
+                  </td>
+                  <td>KES{b.total_amount}</td>
+                  <td>
+                    <span
+                      className={
+                        b.booking_status === "Approved"
+                          ? "text-success"
+                          : b.booking_status === "Rejected"
+                          ? "text-error"
+                          : b.booking_status === "Pending"
+                          ? "text-warning"
+                          : b.booking_status === "Completed"
+                          ? "text-info"
+                          : b.booking_status === "Active"
+                          ? "text-primary"
+                          : "text-gray-400"
+                      }
+                    >
+                      {b.booking_status}
+                    </span>
+                  </td>
+                  <td>
+                    <input
+                      type="text"
+                      placeholder="Add note..."
+                      className="input input-sm input-bordered w-full"
+                      value={b.notes || ""}
+                      onBlur={(e) => updateNotes(b.booking_id, e.target.value)}
+
+                      //onChange={(e) => updateNotes(b.booking_id, e.target.value)}
+                    />
+                  </td>
+                  <td className="flex flex-wrap gap-1">
+                    {b.booking_status === "Pending" && (
+                      <>
+                        <button
+                          className="btn btn-sm btn-success"
+                          onClick={() => handleApprove(b.booking_id)}
+                        >
+                          Approve
+                        </button>
+
+                       <button
                         className="btn btn-sm btn-error"
-                        onClick={() => rejectBooking(b.id)}
+                        onClick={() => handleReject(b.booking_id)}
                       >
                         Reject
                       </button>
-                    </>
-                  )}
-                  {(b.status === "approved" || b.status === "checked-in") && (
-                    <button
-                      className="btn btn-sm btn-info"
-                      onClick={() => checkInOut(b.id)}
-                    >
-                      {b.status === "checked-in" ? "Check-out" : "Check-in"}
-                    </button>
-                  )}
-                  {b.status !== "cancelled" && (
-                    <button
-                      className="btn btn-sm btn-warning"
-                      onClick={() => cancelBooking(b.id)}
-                    >
-                      Cancel
-                    </button>
-                  )}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+                      
+                      </>
+                    )}
+                    {(b.booking_status === "Approved" || b.booking_status === "Active") && (
+                      <button
+                        className="btn btn-sm btn-info"
+                        onClick={() => checkInOut(b)}
+                      >
+                        {b.booking_status === "Active" ? "Check-out" : "Check-in"}
+                      </button>
+                    )}
+                    {b.booking_status !== "Cancelled" && (
+                      <button
+                        className="btn btn-sm btn-warning"
+                        onClick={() => cancelBooking(b.booking_id)}
+                      >
+                        Cancel
+                      </button>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
     </AdminLayout>
   );
 };
 
 export default AllBookings;
+

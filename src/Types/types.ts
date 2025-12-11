@@ -241,7 +241,7 @@ export interface BookingInfo{
         side_image_url: string;
         interior_image_url: string;
     },
-    payment: string;
+    payment: PaymentsResponse | null; 
 }
 
 export interface BookingResponse{
@@ -262,7 +262,7 @@ export interface PaymentsResponse{
         payment_id: number;
         booking_id: number;
         amount: number;
-        payment_status: "Pending" | "Success" | "Failed";
+        payment_status: "Pending" | "Success" | "Failed" | "refunded" | "Completed";
         payment_date: string | null;
         payment_method: string;
         transaction_id: string;
@@ -302,6 +302,17 @@ export interface VehicleSpec {
     seating_capacity: string;
     color: string;
     features: string;
+}
+
+export interface Ticket{
+    ticket_id:number;
+    user_id: number;
+    subject: string;
+    description: string;
+    status: boolean;
+    created_at: string;
+    updated_at: string;
+    unread_count: number;
 }
 
   // {

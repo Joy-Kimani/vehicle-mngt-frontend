@@ -37,7 +37,7 @@ const Login:React.FC = () => {
             if (response.userInfo.role==='user'){
                 navigate('/vehicles')
             } else if (response.userInfo.role==='admin'){
-                navigate('/dashboard')
+                navigate('/admin-dashboard')
             } else{
                 navigate('/')
             }
@@ -127,7 +127,7 @@ const Login:React.FC = () => {
                     {/* Forgot Password Link */}
                     <div className="text-right">
                         <Link 
-                            to="#" 
+                            to="/reset-password" 
                             className="text-amber-700 hover:text-amber-800 text-sm transition duration-300">
                             Forgot your password?
                         </Link>

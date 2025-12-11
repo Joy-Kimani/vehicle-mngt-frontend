@@ -10,6 +10,16 @@ interface UserInfo{
     role:string
 }
 
+interface RequestResetPayload {
+  email: string;
+}
+
+interface ResetPasswordPayload {
+  email: string;
+  otp: string;
+  newPassword: string;
+}
+
 //define api
 export const AuthApi = createApi({
     reducerPath: 'authApi',
@@ -31,5 +41,23 @@ export const AuthApi = createApi({
                 body: credentials,
             }),
         }),
+        requestPasswordReset: builder.mutation< { message: string }, RequestResetPayload>({
+          query: (body) => ({
+            url: "/auth/request-reset",
+            method: "POST",
+            body,
+          }),
+        }),
+        resetPassword: builder.mutation<{ message: string },ResetPasswordPayload>({
+        query: (body) => ({
+          url: "/auth/reset-password",
+          method: "POST",
+          body,
+        }),
+       }),
+        
     })
 })
+
+
+

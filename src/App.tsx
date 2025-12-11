@@ -11,13 +11,20 @@ import Bookings from './pages/users/Bookings';
 import Settings from './pages/users/Settings';
 import Support from './pages/users/Support';
 import Payments from './pages/users/Payments';
-import PaymentRedirect from './pages/users/PaymentRedirect';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import AllBookings from './pages/admin/AllBookings';
 import AllPayments from './pages/admin/AllPayments';
 import AllTickets from './pages/admin/AllTickets';
 import Analytics from './pages/admin/Analytics';
 import AllVehicles from './pages/admin/AllVehicles';
+import PaymentHistory from './pages/users/PaymentHistory';
+import PaymentCallback from './pages/users/PaymentCallback';
+import SettingsPage from './pages/admin/SettingsPage';
+import PublicRoute from './components/Auth/PublicRoute';
+import UserRoute from './components/Auth/UserRoute';
+import AdminRoute from './components/Auth/AdminRoute';
+import UserManagement from './pages/admin/UserManagement';
+import ResetPassword from './pages/ResetPassword';
 
 function App() {
 
@@ -41,64 +48,76 @@ function App() {
     },
     {
       path: '/login',
-      element: <Login />
+      element: <PublicRoute><Login/></PublicRoute>
+    },
+    {
+      path: '/reset-password',
+      element: <PublicRoute><ResetPassword/></PublicRoute>
     },
     {
       path: '/register',
-      element: <Register />
+      element: <PublicRoute><Register /></PublicRoute>
     },
     {
       path:'/dashboard',
-      element: <Dashboard/>
+      element: <UserRoute><Dashboard/></UserRoute>
     },
     {
       path:'/dashboard/bookings',
-      element: <Bookings/>
+      element: <UserRoute><Bookings/></UserRoute>
     },
     {
       path:'/dashboard/settings',
-      element: <Settings />
+      element: <UserRoute><Settings /></UserRoute>
     },
     {
       path: '/dashboard/support',
-      element:  <Support />
+      element:  <UserRoute><Support /></UserRoute>
     },
     {
-      path:'/dashboard/payments',
-      element: <Payments />
+      path:'/dashboard/payments/:bookingId',
+      element: <UserRoute><Payments /></UserRoute>
     },
     {
-      path:"/payment/callback",
-      element: <PaymentRedirect/>
+      path: '/dashboard/payments',
+      element: <UserRoute><PaymentHistory /></UserRoute>
+    },
+    {
+      path: '/dashboard/payment/callback',
+      element: <UserRoute><PaymentCallback /></UserRoute>
     },
     {
       path: "/admin-dashboard",
-      element: <AdminDashboard/>
+      element: <AdminRoute><AdminDashboard/></AdminRoute>
     },
     {
       path: "/admin-dashboard/bookings",
-      element: <AllBookings/>
+      element: <AdminRoute><AllBookings/></AdminRoute>
     },
     {
       path: "/admin-dashboard/payments",
-      element: <AllPayments/>
+      element: <AdminRoute><AllPayments/></AdminRoute>
     },
     {
       path: "/admin-dashboard/tickets",
-      element: <AllTickets/>
+      element: <AdminRoute><AllTickets/></AdminRoute>
     },
     {
-      path: "/admin-dashboard/settings",
-      element: <Settings/>
+      path: "/admin-dashboard/user-manage",
+      element: <UserManagement/>
     },
     {
       path: "/admin-dashboard/analytics",
-      element: <Analytics/>
+      element: <AdminRoute><Analytics/></AdminRoute>
     },
     {
       path: '/admin-dashboard/vehicles',
-      element: <AllVehicles/>
-    }
+      element: <AdminRoute><AllVehicles/></AdminRoute>
+    },
+    {
+      path:'/admin-dashboard/settings',
+      element: <AdminRoute><SettingsPage /></AdminRoute>
+    },
 
   ])
  

@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link, useLocation } from 'react-router'
-import { DollarSignIcon, LayoutDashboardIcon, LogOut, Settings, Ticket, ToolCase} from 'lucide-react'
+import { DollarSignIcon, LayoutDashboardIcon, LogOut, Settings, Ticket, ToolCase, User2Icon} from 'lucide-react'
 
 const AdminSideNav:React.FC = () => {
   const location = useLocation()
@@ -9,7 +9,7 @@ const AdminSideNav:React.FC = () => {
 
     const navigationItems = [
         {
-            name: 'My Dashboard',
+            name: ' Admin Dashboard',
             path: '/admin-dashboard',
             icon: <LayoutDashboardIcon className="w-5 h-5" />
             
@@ -20,7 +20,7 @@ const AdminSideNav:React.FC = () => {
             icon: <Ticket className="w-5 h-5" />
         },
         {
-            name: 'My Payment History',
+            name: 'Payment History',
             path: '/admin-dashboard/payments',
             icon: <DollarSignIcon className="w-5 h-5" />
         },
@@ -38,6 +38,11 @@ const AdminSideNav:React.FC = () => {
             name: 'Analytics',
             path: '/admin-dashboard/analytics',
             icon: <ToolCase className="w-5 h-5" />
+        },
+        {
+            name: 'User management',
+            path: '/admin-dashboard/user-manage',
+            icon: <User2Icon className="w-5 h-5" />
         },
         {
             name: 'Back to site',
