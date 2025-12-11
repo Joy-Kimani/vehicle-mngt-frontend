@@ -1,6 +1,11 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
 interface UserInfo{
+    avatar: string;
+    location: string;
+    country: string;
+    language: string;
+    time_zone: string;
     user_id: number,
     first_name: string,
     last_name: string,

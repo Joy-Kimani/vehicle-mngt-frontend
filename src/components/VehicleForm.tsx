@@ -1,7 +1,6 @@
-// components/VehicleForm.tsx
 import React, { useState } from 'react';
-import { useCreateVehicleMutation } from '../features/Api/VehicleApi';
-//import { uploadToCloudinary } from 
+import {vehicleApi } from '../features/Api/VehicleApi';
+// import { uploadToCloudinary } from ""
 
 const VehicleForm: React.FC<{ onDone?: () => void }> = ({ onDone }) => {
   const [form, setForm] = useState({
@@ -21,7 +20,7 @@ const VehicleForm: React.FC<{ onDone?: () => void }> = ({ onDone }) => {
   const [sideFile, setSideFile] = useState<File | null>(null);
   const [interiorFile, setInteriorFile] = useState<File | null>(null);
 
-  const [createVehicle, { isLoading }] = useCreateVehicleMutation();
+  const [createVehicle, { isLoading }] = vehicleApi.useCreateVehicleMutation();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -81,3 +80,7 @@ const VehicleForm: React.FC<{ onDone?: () => void }> = ({ onDone }) => {
 };
 
 export default VehicleForm;
+function uploadToCloudinary(frontFile: File): any {
+  throw new Error('Function not implemented.');
+}
+

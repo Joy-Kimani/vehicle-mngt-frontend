@@ -73,9 +73,9 @@ export const BookingsApi = createApi({
       providesTags: ["BookingDetails"],
     }),
 
-    approveBooking: builder.mutation({
-      query: (id) => ({
-        url: `/bookings/${id}/approve`,
+    approveBooking: builder.mutation<void, number>({
+      query: (booking_id) => ({
+        url: `/bookings/${booking_id}/approve`,
         method: "PUT",
       }),
       invalidatesTags: ["BookingDetails"],

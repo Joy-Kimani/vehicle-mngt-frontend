@@ -10,7 +10,18 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-const RentalsChart:React.FC = ({ data }) => {
+// Define the type for a single data point
+interface RentalDataPoint {
+  month: string;   // e.g., "January"
+  rentals: number; // number of rentals in that month
+}
+
+// Props interface
+interface RentalsChartProps {
+  data: RentalDataPoint[];
+}
+
+const RentalsChart: React.FC<RentalsChartProps> = ({ data }) => {
   return (
     <div className="bg-gray-800 shadow-xl rounded-xl p-6 border border-indigo-600/50 h-96">
       <h3 className="text-lg font-bold text-indigo-400 mb-4">Monthly Rentals</h3>

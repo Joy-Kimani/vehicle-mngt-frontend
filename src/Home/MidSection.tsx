@@ -1,14 +1,14 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router';
 
-const MidSection:React.FC = () => {
-  const containerRef = useRef(null);
+const MidSection: React.FC = () => {
+  const containerRef = useRef<HTMLDivElement | null>(null); // ref typed correctly
   const [index, setIndex] = useState(0);
 
   const items = [
     {
       title: '1957 Mercedes-Benz 300 SL',
-      price: 2800, 
+      price: 2800,
       description: 'Iconic Gullwing. Concours Condition. Ideal for film and high-end exhibits.',
       images: [
         'https://placehold.co/260x256/1c1917/b45309?text=1957+300SL',
@@ -70,17 +70,15 @@ const MidSection:React.FC = () => {
         const container = containerRef.current;
 
         if (container) {
-
-          const cardWidth = container.querySelector('.card-item')?.clientWidth || 304; 
-          const scrollPosition = next * (cardWidth + 24); 
+          const card = container.querySelector('.card-item') as HTMLElement | null;
+          const cardWidth = card?.clientWidth || 304;
+          const scrollPosition = next * (cardWidth + 24);
           container.scrollTo({ left: scrollPosition, behavior: 'smooth' });
 
-          // reset scroll to loop
           if (next === 0) {
-              // then jump to the first after seeing the last card
-              setTimeout(() => {
-                  container.scrollTo({ left: 0, behavior: 'instant' });
-              }, 400); 
+            setTimeout(() => {
+              container.scrollTo({ left: 0, behavior: 'auto' }); // instant jump
+            }, 400);
           }
         }
 
@@ -89,23 +87,23 @@ const MidSection:React.FC = () => {
     }, 2500);
 
     return () => clearInterval(interval);
-  }, [items.length]); 
+  }, [items.length]);
+
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+    const img = e.currentTarget;
+    img.onerror = null;
+    img.src = 'https://placehold.co/260x256/1c1917/b45309?text=Image+Not+Found';
+  };
 
   return (
     <div className="w-full py-12 bg-zinc-900 font-serif">
-      {/*scrollbar hiding default scrollbar */}
       <style>
         {`
-          .no-scrollbar::-webkit-scrollbar {
-              display: none;
-          }
-          .no-scrollbar {
-              -ms-overflow-style: none;  /* IE and Edge */
-              scrollbar-width: none;  /* Firefox */
-          }
+          .no-scrollbar::-webkit-scrollbar { display: none; }
+          .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         `}
       </style>
-      
+
       <div className="text-center mb-10">
         <h3 className="text-3xl font-bold text-white mb-2">
           Featured Exhibition Vehicles
@@ -115,28 +113,25 @@ const MidSection:React.FC = () => {
         </p>
       </div>
 
-     <div
-         ref={containerRef}
-         className="grid grid-flow-col auto-cols-[80%] sm:auto-cols-[40%] md:auto-cols-[30%] lg:auto-cols-[20%] xl:auto-cols-[25%] gap-6 px-6 overflow-x-auto no-scrollbar snap-x snap-mandatory scroll-smooth"
+      <div
+        ref={containerRef}
+        className="grid grid-flow-col auto-cols-[80%] sm:auto-cols-[40%] md:auto-cols-[30%] lg:auto-cols-[20%] xl:auto-cols-[25%] gap-6 px-6 overflow-x-auto no-scrollbar snap-x snap-mandatory scroll-smooth"
       >
         {items.map((item, idx) => (
-          <div 
-            key={idx} 
+          <div
+            key={idx}
             className="card-item card bg-zinc-800 text-gray-100 rounded-xl shadow-2xl snap-start flex flex-col hover:shadow-amber-500/50 transition-shadow duration-300 min-w-[280px]"
           >
             <figure className="h-48 overflow-hidden rounded-t-xl">
-             
-              <img 
-                src={item.images[0]} 
-                alt={`${item.title} Car`} 
+              <img
+                src={item.images[0]}
+                alt={`${item.title} Car`}
                 className="object-cover w-full h-full transform hover:scale-105 transition-transform duration-500"
-                onError={(e) => { e.target.onerror = null; e.target.src="https://placehold.co/260x256/1c1917/b45309?text=Image+Not+Found"; }}
+                onError={handleImageError} // fixed typing
               />
             </figure>
             <div className="p-5 flex-grow">
-              <h2 className="text-xl font-bold text-amber-500 mb-2">
-                {item.title}
-              </h2>
+              <h2 className="text-xl font-bold text-amber-500 mb-2">{item.title}</h2>
               <p className="text-sm text-gray-300 mb-4">{item.description}</p>
               <div className="mt-auto">
                 <span className="font-mono text-2xl font-extrabold">${item.price}</span>
@@ -144,27 +139,24 @@ const MidSection:React.FC = () => {
               </div>
             </div>
             <button className="bg-amber-600 hover:bg-amber-500 text-zinc-900 font-bold py-3 px-4 rounded-b-xl transition duration-300">
-              <Link to ="/vehicles">
-                Inquire & Rent Now
-                </Link>
+              <Link to="/vehicles">Inquire & Rent Now</Link>
             </button>
           </div>
         ))}
       </div>
-      
-      {/* Indicators */}
+
       <div className="flex justify-center gap-2 mt-8">
-      {items.map((_, i) => (
-        <div
-          key={i}
-          className={`h-2 w-6 rounded-full transition-all duration-300 cursor-pointer ${
-          i === index % items.length ? 'bg-amber-500 w-8' : 'bg-gray-700'
-        }`}
-       ></div>
-      ))}
+        {items.map((_, i) => (
+          <div
+            key={i}
+            className={`h-2 w-6 rounded-full transition-all duration-300 cursor-pointer ${
+              i === index % items.length ? 'bg-amber-500 w-8' : 'bg-gray-700'
+            }`}
+          ></div>
+        ))}
       </div>
     </div>
   );
 };
 
-export default MidSection
+export default MidSection;

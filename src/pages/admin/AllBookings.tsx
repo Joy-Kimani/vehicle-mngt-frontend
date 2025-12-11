@@ -1,62 +1,39 @@
-import React, { useState } from "react";
+import React from "react";
 import AdminLayout from "../../components/adminDashboard/AdminLayout";
 import { BookingsApi } from "../../features/Api/BookingsApi";
 import type { BookingResponse } from "../../Types/types";
 
 const AllBookings: React.FC = () => {
+  // Fetch all bookings
   const { data: bookings = [], isLoading, error } = BookingsApi.useGetAllBookingsQuery();
 
   // Mutations
   const [approveBookingMutation] = BookingsApi.useApproveBookingMutation();
   const [cancelBookingMutation] = BookingsApi.useCancelBookingMutation();
   const [updateBookingMutation] = BookingsApi.useUpdateBookingMutation();
-  const [extendBookingMutation] = BookingsApi.useExtendBookingMutation();
 
   // Approve booking
-  const approveBooking = async (booking_id: number) => {
+  const handleApprove = async (booking_id: number) => {
     try {
       await approveBookingMutation(booking_id).unwrap();
       console.log("Booking approved:", booking_id);
     } catch (err) {
-      console.error("Failed to approve booking:", err);
+      console.error("Approve failed:", err);
     }
   };
-  const handleApprove = async (booking_id: number) => {
-  try {
-    await approveBooking(booking_id).unwrap();
-    console.log("Booking approved:", booking_id);
-  } catch (error) {
-    console.error("Approve failed:", error);
-  }
-};
 
-
-  // Reject booking 
-  const rejectBooking = async (booking_id: number) => {
+  // Reject booking
+  const handleReject = async (booking_id: number) => {
     try {
       await updateBookingMutation({ booking_id, booking_status: "Rejected" }).unwrap();
       console.log("Booking rejected:", booking_id);
     } catch (err) {
-      console.error("Failed to reject booking:", err);
+      console.error("Reject failed:", err);
     }
   };
 
-  const handleReject = async (booking_id: number) => {
-  try {
-    await updateBookingMutation({
-      booking_id,
-      booking_status: "Rejected",
-    }).unwrap();
-
-    console.log("Booking rejected:", booking_id);
-  } catch (error) {
-    console.error("Reject failed:", error);
-  }
-};
-
-
   // Check-in / Check-out toggle
-  const checkInOut = async (b: BookingResponse) => {
+  const handleCheckInOut = async (b: BookingResponse) => {
     try {
       const newStatus =
         b.booking_status === "Active" || b.booking_status === "Approved"
@@ -70,20 +47,20 @@ const AllBookings: React.FC = () => {
   };
 
   // Cancel booking
-  const cancelBooking = async (booking_id: number) => {
+  const handleCancel = async (booking_id: number) => {
     try {
       await cancelBookingMutation({ booking_id }).unwrap();
       console.log("Booking cancelled:", booking_id);
     } catch (err) {
-      console.error("Failed to cancel booking:", err);
+      console.error("Cancel failed:", err);
     }
   };
 
   // Update notes
-  const updateNotes = async (booking_id: number, notes: string) => {
+  const handleUpdateNotes = async (booking_id: number, notes: string) => {
     try {
       await updateBookingMutation({ booking_id, notes }).unwrap();
-      console.log("Notes updated for booking:", booking_id);
+      console.log("Notes updated:", booking_id);
     } catch (err) {
       console.error("Failed to update notes:", err);
     }
@@ -117,24 +94,16 @@ const AllBookings: React.FC = () => {
                   <td>{b.booking_id}</td>
                   <td>{b.vehicle_id}</td>
                   <td>{b.user_id}</td>
-                  <td>
-                    {b.booking_date} → {b.return_date}
-                  </td>
+                  <td>{b.booking_date} → {b.return_date}</td>
                   <td>KES{b.total_amount}</td>
                   <td>
                     <span
                       className={
-                        b.booking_status === "Approved"
-                          ? "text-success"
-                          : b.booking_status === "Rejected"
-                          ? "text-error"
-                          : b.booking_status === "Pending"
-                          ? "text-warning"
-                          : b.booking_status === "Completed"
-                          ? "text-info"
-                          : b.booking_status === "Active"
-                          ? "text-primary"
-                          : "text-gray-400"
+                        b.booking_status === "Approved" ? "text-success" :
+                        b.booking_status === "Rejected" ? "text-error" :
+                        b.booking_status === "Pending" ? "text-warning" :
+                        b.booking_status === "Completed" ? "text-info" :
+                        b.booking_status === "Active" ? "text-primary" : "text-gray-400"
                       }
                     >
                       {b.booking_status}
@@ -145,46 +114,24 @@ const AllBookings: React.FC = () => {
                       type="text"
                       placeholder="Add note..."
                       className="input input-sm input-bordered w-full"
-                      value={b.notes || ""}
-                      onBlur={(e) => updateNotes(b.booking_id, e.target.value)}
-
-                      //onChange={(e) => updateNotes(b.booking_id, e.target.value)}
+                      defaultValue={b.notes || ""}
+                      onBlur={(e) => handleUpdateNotes(b.booking_id, e.target.value)}
                     />
                   </td>
                   <td className="flex flex-wrap gap-1">
                     {b.booking_status === "Pending" && (
                       <>
-                        <button
-                          className="btn btn-sm btn-success"
-                          onClick={() => handleApprove(b.booking_id)}
-                        >
-                          Approve
-                        </button>
-
-                       <button
-                        className="btn btn-sm btn-error"
-                        onClick={() => handleReject(b.booking_id)}
-                      >
-                        Reject
-                      </button>
-                      
+                        <button className="btn btn-sm btn-success" onClick={() => handleApprove(b.booking_id)}>Approve</button>
+                        <button className="btn btn-sm btn-error" onClick={() => handleReject(b.booking_id)}>Reject</button>
                       </>
                     )}
                     {(b.booking_status === "Approved" || b.booking_status === "Active") && (
-                      <button
-                        className="btn btn-sm btn-info"
-                        onClick={() => checkInOut(b)}
-                      >
+                      <button className="btn btn-sm btn-info" onClick={() => handleCheckInOut(b)}>
                         {b.booking_status === "Active" ? "Check-out" : "Check-in"}
                       </button>
                     )}
                     {b.booking_status !== "Cancelled" && (
-                      <button
-                        className="btn btn-sm btn-warning"
-                        onClick={() => cancelBooking(b.booking_id)}
-                      >
-                        Cancel
-                      </button>
+                      <button className="btn btn-sm btn-warning" onClick={() => handleCancel(b.booking_id)}>Cancel</button>
                     )}
                   </td>
                 </tr>

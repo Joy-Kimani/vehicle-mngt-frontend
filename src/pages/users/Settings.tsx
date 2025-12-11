@@ -14,7 +14,7 @@ const Profile: React.FC = () => {
   const user_id = user?.user_id;
 
   const {data: bookings} = BookingsApi.useGetBookingsByUserQuery(user_id ?? skipToken);
-  const { data: paymentHistory = []} = paymentsApi.useGetPaymentsByUserQuery(user_id ?? skipToken);
+  const { data: paymentHistory = []} = paymentsApi.useGetUserPaymentsByIdQuery(user_id ?? skipToken);
   const {data: tickets = []} = ticketsApi.useGetUserTicketsQuery(user_id ?? skipToken);
 
 
@@ -41,9 +41,9 @@ const Profile: React.FC = () => {
         {/* PROFILE CARD */}
         <div className={`${ZINC_SURFACE_CLASS} flex gap-8 items-center`}>
           {/* AVATAR */}
-          <img
+          <img          
             src={
-              user?.avatar ||
+              user?.avatar ??
               "https://cdn-icons-png.flaticon.com/512/149/149071.png"
             }
             className="w-28 h-28 rounded-full object-cover border-4 border-yellow-600 shadow-lg"

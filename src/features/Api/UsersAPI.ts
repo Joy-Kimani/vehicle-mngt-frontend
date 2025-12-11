@@ -9,6 +9,7 @@ export interface Customer {
  contact_phone:string,
  role:string,
  is_active: boolean
+ 
 }
 
 

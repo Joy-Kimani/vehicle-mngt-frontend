@@ -10,8 +10,8 @@ const DashboardOverview: React.FC = () => {
 
   const { data: analyticsData = [], error: analyticsError, isLoading: isAnalyticsLoading } = BookingsApi.useGetAllBookingsQuery();
   //console.log("All Bookings Data:", analyticsData);
-
-  const { data: totalVehiclesData = [], error: totalVehiclesError, isLoading: isTotalVehiclesLoading } = AdminDashboardApi.useGetTotalVehiclesQuery();
+const { data: totalVehiclesData = [], error: totalVehiclesError, isLoading: isTotalVehiclesLoading } =
+  AdminDashboardApi.useGetTotalVehiclesQuery(undefined);
   //console.log("Total Vehicles Data:", totalVehiclesData);
 
   const {data:paymentStatusData, error:paymentStatusError, isLoading:isPaymentStatusLoading} = AdminDashboardApi.useGetPaymentStatusSummaryQuery();

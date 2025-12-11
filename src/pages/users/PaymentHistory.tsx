@@ -9,7 +9,7 @@ const PaymentHistory: React.FC = () => {
   const user_id = useSelector((state: RootState) => state.authSlice.user?.user_id);
 
   const { data: paymentHistory = [], isLoading: isPaymentLoading, error: isPayError } =
-    paymentsApi.useGetPaymentsByUserQuery(user_id ?? skipToken);
+    paymentsApi.useGetAllPaymentsQuery();
 
   return (
     <UserLayOut>

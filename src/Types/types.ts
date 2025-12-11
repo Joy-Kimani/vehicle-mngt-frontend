@@ -255,20 +255,47 @@ export interface BookingResponse{
         booking_status: "Pending" | "Approved" | "Active" | "Completed" | "Cancelled" | "Rejected";
         created_at: string;
         updated_at: string | null;
+        notes: string | null;
     
 }
 
 export interface PaymentsResponse{
         payment_id: number;
         booking_id: number;
+        
         amount: number;
         payment_status: "Pending" | "Success" | "Failed" | "refunded" | "Completed";
         payment_date: string | null;
         payment_method: string;
         transaction_id: string;
+        payment_reference: string;
         created_at: string;
         updated_at: string | null;
 }
+
+
+export interface Customer {
+ user_id: number,
+ first_name: string,
+ last_name: string,
+ email: string,
+ password:string,
+ contact_phone:string,
+ role:string,
+ is_active: boolean
+ 
+}
+
+// export interface PaymentsResponse {
+//   payment_id: number;
+//   amount: number;
+//   status: string;
+//   user_id: number;
+//   booking_id: number;
+//      // <-- ADD THIS
+//   created_at: string;
+// }
+
 
 export interface AdminUser 
    {

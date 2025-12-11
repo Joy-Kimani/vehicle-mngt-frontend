@@ -211,8 +211,8 @@ const Support: React.FC = () => {
                   <p className="text-zinc-400 text-center">Loading messages...</p>
                 ) : messages.length === 0 ? (
                   <p className="text-zinc-500 text-center py-10">No messages in this conversation yet. Send the first one!</p>
-                ) : (
-                  messages.map((msg: Message, index) => (
+                ) : (                  
+                  messages.map((msg: Message, index: number) => (
                     <div
                       key={index}
                       className={`flex ${
